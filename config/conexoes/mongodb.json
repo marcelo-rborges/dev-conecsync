@@ -1,0 +1,6 @@
+{
+  "host": "mongodb://localhost:27017",
+  "database": "conecdata",
+  "usuario": "conecdata",
+  "senha": "masterkey"
+}
