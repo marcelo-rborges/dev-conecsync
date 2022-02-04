@@ -29,7 +29,12 @@
   "license": "MIT",
   "dependencies": {
     "gluegun": "latest",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "sequelize": "^6.15.0",
+    "mariadb": "^2.5.1",
+    "mysql2": "^2.2.5",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

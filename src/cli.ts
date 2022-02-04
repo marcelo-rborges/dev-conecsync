@@ -1,5 +1,4 @@
-import { build } from 'gluegun'
-
+import { build } from 'gluegun';
 /**
  * Create the cli and kick it off
  */
@@ -16,10 +15,9 @@ async function run(argv) {
   // this can improve performance if they're not necessary for your project:
   // .exclude(['meta', 'strings', 'print', 'filesystem', 'semver', 'system', 'prompt', 'http', 'template', 'patching', 'package-manager'])
   // and run it
-  const toolbox = await cli.run(argv)
-
+  const toolbox = await cli.run(argv);
   // send it back (for testing, mostly)
-  return toolbox
+  return toolbox;
 }
 
 module.exports = { run }

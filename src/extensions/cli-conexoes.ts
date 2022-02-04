@@ -2,7 +2,7 @@ import { GluegunToolbox } from 'gluegun';
 
 import { get } from 'lodash';
 const firebird = require('../../config/conexoes/firebird.json');
-// const mariadb = require('../../config/conexoes/mariadb.json');
+const mariadb = require('../../config/conexoes/mariadb.json');
 // const mongodb = require('../../config/conexoes/mongodb.json');
 const mssql = require('../../config/conexoes/mssql.json');
 const mysql = require('../../config/conexoes/mysql.json');
@@ -31,9 +31,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       && get(firebird, 'user')
       && get(firebird, 'password')
     ) {
-      CONFIG.push(['Firebird', JSON.stringify(firebird)]);
+      CONFIG.push(['firebird', JSON.stringify(firebird)]);
     } else {
-      NCONFIG.push(['Firebird', JSON.stringify(firebird)]);
+      NCONFIG.push(['firebird', JSON.stringify(firebird)]);
     } // else
 
     // mssql
@@ -43,9 +43,21 @@ module.exports = (toolbox: GluegunToolbox) => {
       && get(mssql, 'usuario')
       && get(mssql, 'senha')
     ) {
-      CONFIG.push(['MsSQL', JSON.stringify(mssql)]);
+      CONFIG.push(['mssql', JSON.stringify(mssql)]);
     } else {
-      NCONFIG.push(['MsSQL', JSON.stringify(mssql)]);
+      NCONFIG.push(['mssql', JSON.stringify(mssql)]);
+    } // else
+
+    // mariadb
+    if (
+      get(mariadb, 'host')
+      && get(mariadb, 'tabela')
+      && get(mariadb, 'usuario')
+      && get(mariadb, 'senha')
+    ) {
+      CONFIG.push(['mariadb', JSON.stringify(mariadb)]);
+    } else {
+      NCONFIG.push(['mariadb', JSON.stringify(mariadb)]);
     } // else
 
     // mysql
@@ -55,9 +67,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       && get(mysql, 'usuario')
       && get(mysql, 'senha')
     ) {
-      CONFIG.push(['MySQL', JSON.stringify(mysql)]);
+      CONFIG.push(['mysql', JSON.stringify(mysql)]);
     } else {
-      NCONFIG.push(['MySQL', JSON.stringify(mysql)]);
+      NCONFIG.push(['mysql', JSON.stringify(mysql)]);
     } // else
 
     // postgresql
@@ -67,9 +79,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       && get(postgresql, 'usuario')
       && get(postgresql, 'senha')
     ) {
-      CONFIG.push(['PostgreSQL', JSON.stringify(postgresql)]);
+      CONFIG.push(['postgresql', JSON.stringify(postgresql)]);
     } else {
-      NCONFIG.push(['PostgreSQL', JSON.stringify(postgresql)]);
+      NCONFIG.push(['postgresql', JSON.stringify(postgresql)]);
     } // else
 
     const CONFIG_LEN: number = CONFIG.length;

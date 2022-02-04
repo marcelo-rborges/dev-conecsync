@@ -1,4 +1,5 @@
 import { GluegunToolbox } from 'gluegun';
+
 const estoque = require('../../config/origens/estoque.json');
 const formasPgto = require('../../config/origens/formas-pgto.json');
 const produtosPromocoes = require('../../config/origens/produtos-promocoes.json');
@@ -37,7 +38,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     );
     print.divider();
     print.warning(`
-      Edite as configurações das origens de dados que deseja utilizar na pasta "config > origens > *.json".
+      Edite as configurações das origens de dados que deseja utilizar na pasta "/config > origens > *.json".
     `);
   };
 
