@@ -3,7 +3,7 @@ import { GluegunToolbox } from 'gluegun';
 // add your CLI-specific functionality here, which will then be accessible
 // to your commands
 module.exports = (toolbox: GluegunToolbox) => {
-  toolbox.menu = async () => {
+  toolbox.guia = async () => {
     const { print } = toolbox;
 
     // multiple choice
@@ -30,12 +30,12 @@ module.exports = (toolbox: GluegunToolbox) => {
     switch (STEP) {
       case 1:
         toolbox.conexoes();
-        toolbox.menu();
+        toolbox.guia();
         break;
 
       case 2:
         toolbox.origens();
-        toolbox.menu();
+        toolbox.guia();
         break;
 
       default:
