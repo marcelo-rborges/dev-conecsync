@@ -2,7 +2,7 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'guia',
-  description: 'Guia passo a passo do sistema.',
+  description: 'Guia interativo de utilização.',
   run: async (toolbox) => {
     const {
       print,

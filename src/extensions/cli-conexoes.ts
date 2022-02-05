@@ -1,15 +1,21 @@
+//#region gluegun
 import { GluegunToolbox } from 'gluegun';
+//#endregion
 
+//#region 3rd
 import { get } from 'lodash';
+//#endregion
+
+//#region models
+const config = require('../../config/config.json');
 const firebird = require('../../config/conexoes/firebird.json');
 const mariadb = require('../../config/conexoes/mariadb.json');
 // const mongodb = require('../../config/conexoes/mongodb.json');
 const mssql = require('../../config/conexoes/mssql.json');
 const mysql = require('../../config/conexoes/mysql.json');
 const postgresql = require('../../config/conexoes/postgresql.json');
+//#endregion
 
-// add your CLI-specific functionality here, which will then be accessible
-// to your commands
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.conexoes = () => {
     // toolbox.print.info('called foo extension');
@@ -21,8 +27,12 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.success(`\n${meta.packageJSON().name} v${meta.version()} > config > conexoes > *.json`);
     print.divider();
 
-    const CONFIG: any[] = [];
-    const NCONFIG: any[] = [];
+    const CONFIG: any[] = [
+      ['Tipo', 'Config']
+    ];
+    const NCONFIG: any[] = [
+      ['Tipo', 'Config']
+    ];
 
     // firebird
     if (
@@ -90,14 +100,14 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.highlight(`Conexões CONFIGURADAS (${CONFIG_LEN})`);
     print.divider();
     !CONFIG_LEN && print.info('Nenhuma conexão encontrada.');
-    print.table(CONFIG);
+    print.table([...CONFIG]);
+    print.warning(`- Conexão em "/config/config.json": ${config.db ? config.db : 'Nenhuma'}.`);
 
     print.divider();
     print.highlight(`Conexões NÃO CONFIGURADAS (${NCONFIG_LEN})`);
     print.divider();
     !NCONFIG_LEN && print.info('Nenhuma conexão encontrada.');
-    print.table(NCONFIG);
-
+    print.table([...NCONFIG]);
 
     // print.table(
     //   [
@@ -112,9 +122,12 @@ module.exports = (toolbox: GluegunToolbox) => {
     //   ]
     // );
     print.divider();
-    print.warning(`
-      Edite as informações de conexão com os bancos de dados que deseja utilizar na pasta "config > conexoes > *.json".
-    `);
+    print.table(
+      [
+        ['Arquivos de configuração', '/config > conexoes > *.json']
+      ],
+    );
+    print.divider();
   };
 
   // enable this if you want to read configuration in from

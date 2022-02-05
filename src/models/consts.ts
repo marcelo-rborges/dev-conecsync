@@ -1,4 +1,12 @@
+//#region 3rd
 const { DataTypes } = require('sequelize');
+//#endregion
+
+//#region dbs
+export const SUPPORTED_SQLS = ['firebird', 'mariadb', 'mssql', 'mysql', 'postgresql'];
+export const SUPPORTED_NOSQLS = ['mongodb'];
+export const SUPPORTED_ALL = [...SUPPORTED_SQLS, ...SUPPORTED_NOSQLS];
+//#endregion
 
 // CSVs
 // export const PRODUTOS_REQ_FIELDS: string[] = [
@@ -31,7 +39,7 @@ const { DataTypes } = require('sequelize');
 //   // 'fracionado_status', // BOOLEAN
 //   // 'fracionado_fracao', // FLOAT
 //   // 'fracionado_perc_desc_promo_auto', // FLOAT
-//   // 'fracionado_tipo', // STRING
+//   // 'tipo_unidade_fracao', // STRING
 
 //   // 'estoque_controlado', // BOOLEAN
 //   // 'qtde_estoque_atual', // INTEGER/FLOAT
@@ -56,7 +64,7 @@ const { DataTypes } = require('sequelize');
 // Apis
 export const API_URLS = {
   mercadeiro: {
-    sandbox: 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1',
+    sandbox: 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1', // 'https://api.sandbox.mercadeiro.com.br/v1'
     producao: 'https://us-central1-mercadeiro--prod.cloudfunctions.net/v1', // 'https://api.mercadeiro.com.br/v1'
   }
 }
@@ -82,9 +90,9 @@ export const CAMPOS_ESTOQUE: any = {
     type: DataTypes.STRING,
     field: 'nome_produto'
   },
-  id_loja: {
+  loja_id: {
     type: DataTypes.INTEGER,
-    field: 'id_loja'
+    field: 'loja_id'
   },
   qtde_estoque_minimo: {
     type: DataTypes.DECIMAL,
@@ -111,66 +119,62 @@ export const CAMPOS_FORMAS: any = {
     type: DataTypes.STRING,
     field: 'nome_forma'
   },
-  id_loja: {
+  loja_id: {
     type: DataTypes.INTEGER,
-    field: 'id_loja'
+    field: 'loja_id'
   }
 };
 
 // produtos
 export const CAMPOS_PRODUTOS: any = {
-  id_produto: {
+  id: {
     type: DataTypes.INTEGER,
-    field: 'id_produto',
+    field: 'id',
     primaryKey: true
   },
-  barcode_produto: {
+  barcode: {
     type: DataTypes.STRING,
-    field: 'barcode_produto'
+    field: 'barcode'
   },
-  preco_venda: {
+  preco: {
     type: DataTypes.DECIMAL,
-    field: 'preco_venda'
+    field: 'preco'
   },
-  id_departamento: {
+  departamento_id: {
     type: DataTypes.INTEGER,
-    field: 'id_departamento'
+    field: 'departamento_id'
   },
-  nome_departamento: {
+  departamento_nome: {
     type: DataTypes.STRING,
-    field: 'nome_departamento'
+    field: 'departamento_nome'
   },
-  ativo_departamento: {
+  departamento_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ativo_departamento'
+    field: 'departamento_ativo'
   },
-  id_subdepartamento: {
+  subdepartamento_id: {
     type: DataTypes.INTEGER,
-    field: 'id_subdepartamento'
+    field: 'subdepartamento_id'
   },
-  nome_subdepartamento: {
+  subdepartamento_nome: {
     type: DataTypes.STRING,
-    field: 'nome_subdepartamento'
+    field: 'subdepartamento_nome'
   },
-  ativo_subdepartamento: {
+  subdepartamento_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ativo_subdepartamento'
+    field: 'subdepartamento_ativo'
   },
-  nome_produto: {
+  nome: {
     type: DataTypes.STRING,
-    field: 'nome_produto'
+    field: 'nome'
   },
-  estoque_controlado: {
-    type: DataTypes.BOOLEAN,
-    field: 'estoque_controlado'
-  },
-  qtde_estoque_minimo: {
+  estoque_minimo: {
     type: DataTypes.DECIMAL,
-    field: 'qtde_estoque_minimo'
+    field: 'estoque_minimo'
   },
-  qtde_estoque_atual: {
+  estoque_atual: {
     type: DataTypes.DECIMAL,
-    field: 'qtde_estoque_atual'
+    field: 'estoque_atual'
   },
   atacado_status: {
     type: DataTypes.BOOLEAN,
@@ -184,62 +188,18 @@ export const CAMPOS_PRODUTOS: any = {
     type: DataTypes.DECIMAL,
     field: 'atacado_preco'
   },
-  percentual_limite_venda: {
-    type: DataTypes.DECIMAL,
-    field: 'percentual_limite_venda'
-  },
-  qtde_limite_venda_max: {
-    type: DataTypes.DECIMAL,
-    field: 'qtde_limite_venda_max'
-  },
-  qtde_limite_venda_min: {
-    type: DataTypes.DECIMAL,
-    field: 'qtde_limite_venda_min'
-  },
-  fracionado_tipo: {
+  tipo_unidade_fracao: {
     type: DataTypes.STRING,
-    field: 'fracionado_tipo'
+    field: 'tipo_unidade_fracao'
   },
-  ativo_produto: {
+  ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ativo_produto'
+    field: 'ativo'
   },
-  descricao_produto: {
-    type: DataTypes.STRING,
-    field: 'descricao_produto'
-  },
-  id_loja: {
+  loja_id: {
     type: DataTypes.INTEGER,
-    field: 'id_loja'
-  },
-  // online_produto: {
-  //   type: DataTypes.BOOLEAN,
-  //   field: 'online_produto'
-  // },
-  // industrializado: {
-  //   type: DataTypes.BOOLEAN,
-  //   field: 'industrializado'
-  // },
-  // fracionado_status: {
-  //   type: DataTypes.BOOLEAN,
-  //   field: 'fracionado_status'
-  // },
-  // fracionado_fracao: {
-  //   type: DataTypes.DECIMAL,
-  //   field: 'fracionado_fracao'
-  // },
-  // fracionado_perc_desc_promo_auto: {
-  //   type: DataTypes.DECIMAL,
-  //   field: 'fracionado_perc_desc_promo_auto'
-  // },
-  // destaque: {
-  //   type: DataTypes.BOOLEAN,
-  //   field: 'destaque'
-  // },
-  // online_departamento: {
-  //   type: DataTypes.BOOLEAN,
-  //   field: 'online_departamento'
-  // },
+    field: 'loja_id'
+  }
 };
 
 // produtosPromocoes
@@ -249,9 +209,9 @@ export const CAMPOS_PRODUTOS_PROMOCOES: any = {
     field: 'id_produto_promocao',
     primaryKey: true
   },
-  id_loja: {
+  loja_id: {
     type: DataTypes.INTEGER,
-    field: 'id_loja'
+    field: 'loja_id'
   },
   id_produto_promocao_promocao: {
     type: DataTypes.INTEGER,
@@ -270,9 +230,9 @@ export const CAMPOS_PROMOCOES: any = {
     field: 'id_promocao',
     primaryKey: true
   },
-  id_loja: {
+  loja_id: {
     type: DataTypes.INTEGER,
-    field: 'id_loja'
+    field: 'loja_id'
   },
   promocao_ativa: {
     type: DataTypes.BOOLEAN,

@@ -2,31 +2,15 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'conecsync',
-  description: 'Diagnóstico e recomendações.',
-  run: (toolbox) => {
-    const {
-      print,
-      meta
-    } = toolbox;
+  description: 'help + diag',
+  run: async (toolbox) => {
+    const { print } = toolbox;
 
-    print.success(`\n${meta.packageJSON().name} v${meta.version()}`);
-    print.divider();
+    print.newline();
+    print.printHelp(toolbox);
+    print.newline();
 
-    // toolbox.diag();
-
-    print.table(
-      [
-        ['conecsync -h', 'Lista completa de comandos.'],
-        ['conecsync guia', 'Inicia guia interativo.'],
-      ]
-    );
-    print.divider();
-    // print.highlight(' > conecsync -h (para lista completa de comandos).');
-    // print.highlight(' > conecsync guia (para guia interativo).');
-    // print.divider();
-
-    // toolbox.guia();
-    // toolbox.command.run();
+    toolbox.run('--dry-run');
   },
 }
 

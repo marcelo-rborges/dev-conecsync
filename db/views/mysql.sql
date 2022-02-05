@@ -1,35 +1,37 @@
+DROP VIEW view_conecdata_produtos;
+
 CREATE VIEW
-    view_mercadeiro_produtos
+    view_conecdata_produtos
   AS SELECT
-    pro_pk AS id,
-    pro_c_barcode AS barcode,
-    pro_f_preco AS preco,
+    seu_id AS id,
+    seu_barcode AS barcode,
+    seu_preco AS preco,
 
-    pro_fk_grupo AS departamento_id,
-    gru_c_grupo AS departamento_nome,
-    gru_b_ativo AS departamento_ativo,
+    seu_id_grupo AS departamento_id,
+    seu_nome_grupo AS departamento_nome,
+    seu_ativo_grupo AS departamento_ativo,
 
-    pro_fk_subgrupo AS subdepartamento_id,
-    sub_c_subgrupo AS subdepartamento_nome,
-    sub_b_ativo AS subdepartamento_ativo,
+    seu_id_subgrupo AS subdepartamento_id,
+    seu_nome_subgrupo AS subdepartamento_nome,
+    seu_ativo_subgrupo AS subdepartamento_ativo,
 
-    pro_c_produto AS nome,
+    seu_nome AS nome,
 
-    pro_f_qtde_estoque_min AS estoque_minimo,
-    pro_f_qtde_estoque_loja AS estoque_atual,
+    sua_qtde_estoque_min AS estoque_minimo,
+    sua_qtde_estoque_atual AS estoque_atual,
 
-    pro_b_atacado AS atacado_status,
-    pro_f_qtde_atacado AS atacado_qtde,
-    pro_f_valor_atacado AS atacado_valor,
+    seu_atacado_status AS atacado_status,
+    sua_qtde_atacado AS atacado_qtde,
+    seu_preco_atacado AS atacado_preco,
 
-    pro_c_fracionado_tipo AS tipo_unidade_fracao,
+    seu_fracionado_tipo AS tipo_unidade_fracao,
 
-    pro_b_ativo AS ativo,
+    seu_ativo AS ativo,
 
-    1 AS loja_id
+    seu_id_loja AS loja_id
   FROM
     produtos
   LEFT JOIN
     grupos AS departamentos ON produtos.pro_fk_grupo = departamentos.gru_pk
   LEFT JOIN
-    subgrupos AS subdepartamentos ON produtos.pro_fk_subgrupo = subdepartamentos.sub_pk
+    subgrupos AS subdepartamentos ON produtos.pro_fk_subgrupo = subdepartamentos.sub_pk;

@@ -1,4 +1,4 @@
 {
-  "tipoConexao": "", 
-  "nomeView": "" 
+  "tipoConexao": "mysql", 
+  "nomeView": "Produtos" 
 }

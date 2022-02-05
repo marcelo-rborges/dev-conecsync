@@ -2,7 +2,7 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'diag',
-  description: 'Executa diagnóstico do sistema.',
+  description: 'run --dry-run (executa sem gravações/acessos à api).',
   run: async (toolbox) => {
     const {
       print,
@@ -11,7 +11,7 @@ const command: GluegunCommand = {
 
     print.success(`\n${meta.packageJSON().name} v${meta.version()} > Diag`);
     print.divider();
-    toolbox.diag();
+    toolbox.run('--dry-run');
   },
 }
 
