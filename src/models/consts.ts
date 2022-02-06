@@ -1,5 +1,10 @@
 //#region 3rd
-const { DataTypes } = require('sequelize');
+const {
+  DataTypes,
+  // Model,
+  // Sequelize
+} = require('sequelize');
+// const sequelize = new Sequelize('sqlite::memory:');
 //#endregion
 
 //#region dbs
@@ -67,7 +72,7 @@ export const API_URLS = {
     sandbox: 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1', // 'https://api.sandbox.mercadeiro.com.br/v1'
     producao: 'https://us-central1-mercadeiro--prod.cloudfunctions.net/v1', // 'https://api.mercadeiro.com.br/v1'
   }
-}
+};
 
 // MODELS
 
@@ -184,9 +189,9 @@ export const CAMPOS_PRODUTOS: any = {
     type: DataTypes.INTEGER,
     field: 'atacado_qtde'
   },
-  atacado_preco: {
+  atacado_valor: {
     type: DataTypes.DECIMAL,
-    field: 'atacado_preco'
+    field: 'atacado_valor'
   },
   tipo_unidade_fracao: {
     type: DataTypes.STRING,

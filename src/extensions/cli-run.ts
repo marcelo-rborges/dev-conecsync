@@ -8,7 +8,7 @@ import { get } from 'lodash';
 
 //#region models
 import {
-  API_URLS,
+  // API_URLS,
   SUPPORTED_SQLS,
   SUPPORTED_NOSQLS
 } from '../models/consts';
@@ -24,7 +24,7 @@ const promocoesJson = require('../../config/origens/promocoes.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
-  toolbox.run = async (args: string) => {
+  toolbox.run = async (props: string) => {
     // toolbox.print.info('called foo extension');
     const {
       parameters,
@@ -55,7 +55,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.info(args);
     // print.info(parameters.options.dryRun);
     const DRY_RUN: boolean = !!(
-      (args || '').toLowerCase() === '--dry-run'
+      (props || '').toLowerCase() === '--dry-run'
       || parameters.options.dryRun
     );
     // print.info(DRY_RUN);
@@ -108,32 +108,6 @@ module.exports = (toolbox: GluegunToolbox) => {
       return;
     } // if
 
-    // origens
-    // const {
-    //   tipoConexao: ESTOQUE_TIPO_CONEXAO,
-    //   nomeView: ESTOQUE_NOME_VIEW
-    // } = estoqueJson;
-
-    // const {
-    //   tipoConexao: FORMAS_PGTO_TIPO_CONEXAO,
-    //   noveView: FORMAS_PGTO_NOME_VIEW
-    // } = formasPgtoJson;
-
-    // const {
-    //   tipoConexao: PRODUTOS_PROMOCOES_TIPO_CONEXAO,
-    //   noveView: PRODUTOS_PROMOCOES_NOME_VIEW
-    // } = produtosPromocoesJson;
-
-    // const {
-    //   tipoConexao: PRODUTOS_TIPO_CONEXAO,
-    //   noveView: PRODUTOS_NOME_VIEW
-    // } = produtosJson;
-
-    // const {
-    //   tipoConexao: PROMOCOES_TIPO_CONEXAO,
-    //   noveView: PROMOCOES_NOME_VIEW
-    // } = promocoesJson;
-
     ORIGENS.estoque = origemOk(estoqueJson);
     ORIGENS.formasPgto = origemOk(formasPgtoJson);
     ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson);
@@ -175,79 +149,25 @@ module.exports = (toolbox: GluegunToolbox) => {
       return;
     } // if
 
+    print.table([...LOGS], { format: 'lean' });
     // Mercadeiro
-    const API_URL: string = CONFIG_SANDBOX
-      ? API_URLS.mercadeiro.sandbox
-      : API_URLS.mercadeiro.producao;
-    LOGS.push(
-      [
-        'Mercadeiro',
-        `${MERCADEIRO_LOJAS.length} loja(s) encontrada(s).`
-      ]
-    );
     if (MERCADEIRO_LOJAS.length) {
-      // LOGS.push(
-      //   [
-      //     'API Mercadeiro',
-      //     `${API_URL} (${CONFIG_SANDBOX ? 'sandbox' : 'produção'})`
-      //   ]
-      // );
-      print.warning(API_URL);
-
-
-
-
-
-
-
-
-
-
-
-      print.table([...LOGS], { format: 'lean' });
-
-      // if (CONFIG_DB) {
-
-      // for (const LOJA of LOJAS) {
-
-      //   print.warning(`> Lendo produtos: Loja ${LOJA.id}.`);
-
-      //   if (DB) {
-      //     print.warning(`> Tipo de conexão indicada: ${DB}.`);
-      //     switch (DB) {
-      //       case 'mssql':
-      //       case 'mariadb':
-      //       case 'mysql':
-      //       case 'postgresql':
-      //         // Sequelize
-      //         try {
-      //           sequelize = await sequelizeConn(DB);
-      //           print.success(`> Conectando ${DB.toUpperCase()}: OK.`);
-      //         } catch (err) {
-      //           print.error(err);
-      //         } finally {
-      //           sequelize && sequelize.close();
-      //         }// try-catch
-      //         break;
-
-      //       // case 'mongodb':
-      //       // break;
-
-      //       case 'firebird':
-      //         break;
-      //     } // switch
-      //   } // if
-      // } // for
-
-
-
+      toolbox.runProjeto(
+        {
+          projeto: 'mercadeiro',
+          lojas: MERCADEIRO_LOJAS,
+          origens: Object.entries(ORIGENS)
+            .filter((origem: any) => origem[1])
+            .map((origem: any) => String(origem[0]))
+        }
+      );
     } // if
 
-    print.divider();
-    print.success('!!!! Diagnóstico concluído com sucesso !!!!');
-    print.divider();
-    print.info('Verifique as configurações e execute "conecsync run" para iniciar a sincronização real.');
-    print.divider();
-    print.newline();
+    // print.divider();
+    // print.success('!!!! Diagnóstico concluído com sucesso !!!!');
+    // print.divider();
+    // print.info('Verifique as configurações e execute "conecsync run" para iniciar a sincronização real.');
+    // print.divider();
+    // print.newline();
   };
 }
