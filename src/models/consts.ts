@@ -173,13 +173,13 @@ export const CAMPOS_PRODUTOS: any = {
     type: DataTypes.STRING,
     field: 'nome'
   },
-  estoque_minimo: {
+  qtde_estoque_minimo: {
     type: DataTypes.DECIMAL,
-    field: 'estoque_minimo'
+    field: 'qtde_estoque_minimo'
   },
-  estoque_atual: {
+  qtde_estoque_atual: {
     type: DataTypes.DECIMAL,
-    field: 'estoque_atual'
+    field: 'qtde_estoque_atual'
   },
   atacado_status: {
     type: DataTypes.BOOLEAN,
@@ -189,9 +189,9 @@ export const CAMPOS_PRODUTOS: any = {
     type: DataTypes.INTEGER,
     field: 'atacado_qtde'
   },
-  atacado_valor: {
+  atacado_preco: {
     type: DataTypes.DECIMAL,
-    field: 'atacado_valor'
+    field: 'atacado_preco'
   },
   tipo_unidade_fracao: {
     type: DataTypes.STRING,

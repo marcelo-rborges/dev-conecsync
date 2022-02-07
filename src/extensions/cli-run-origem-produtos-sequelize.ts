@@ -27,7 +27,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // props
     const {
       // projeto: PROJETO,
-      // apiUrl: API_URL,
+      apiUrl: API_URL,
       loja: LOJA,
       conexao: TIPO_CONEXAO
     } = props;
@@ -84,7 +84,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           where: {
             loja_id: Number(get(LOJA, 'id')),
             barcode: {
-              [Op.eq]: ""
+              [Op.ne]: ""
             }
           }
         }
@@ -95,23 +95,26 @@ module.exports = (toolbox: GluegunToolbox) => {
         {
           where: {
             loja_id: Number(get(LOJA, 'id')),
-            barcode: {
-              [Op.ne]: ""
-            }
+            barcode: ""
           }
         }
       ) || [])
         .map((p: any) => get(p, 'dataValues'));
 
-      print.success(PRODUTOS_BARCODES.length);
-      print.success(PRODUTOS_NBARCODES.length);
-      // toolbox.runSyncProdutos(
-      //   {
-      //     produtos: {
-      //       barcodes: PRODUTOS_BARCODES
-      //     }
-      //   }
-      // );
+      // TODO: verificar barcodes com barcodeFixed() e transferir os recusados.
+
+      // print.success(PRODUTOS_BARCODES.length);
+      // print.success(PRODUTOS_NBARCODES.length);
+      toolbox.runSyncProdutos(
+        {
+          tokenLoja: get(LOJA, 'token'),
+          apiUrl: API_URL,
+          produtos: {
+            barcodes: PRODUTOS_BARCODES,
+            nbarcodes: PRODUTOS_NBARCODES
+          }
+        }
+      );
 
     } catch (error) {
       print.error(get(error, 'message'));
