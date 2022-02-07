@@ -16,6 +16,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // props
     const {
+      dryRun: DRY_RUN,
       projeto: PROJETO,
       apiUrl: API_URL,
       loja: LOJA,
@@ -41,6 +42,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       case 'postgresql':
         toolbox.runOrigemProdutosSequelize(
           {
+            dryRun: DRY_RUN,
             projeto: PROJETO,
             apiUrl: API_URL,
             loja: LOJA,

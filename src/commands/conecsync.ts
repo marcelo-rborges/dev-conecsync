@@ -2,7 +2,7 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'conecsync',
-  description: 'help + diag',
+  description: 'help + diag (modo simulação).',
   run: async (toolbox) => {
     const { print } = toolbox;
 

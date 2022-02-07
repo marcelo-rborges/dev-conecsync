@@ -9,7 +9,7 @@ export function chkBool(val: any): boolean | null {
       break;
 
     case 'string':
-      return ['S', 'T', '1'].includes(val.trim().toUpperCase());
+      return ['S', 'T', '1', 'SIM', 'TRUE'].includes(val.trim().toUpperCase());
       break;
 
     default:

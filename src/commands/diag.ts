@@ -2,7 +2,7 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'diag',
-  description: 'run --dry-run (executa sem gravações/acessos à api).',
+  description: 'Roda em modo simulação (executa sem gravações/acessos à api).',
   run: async (toolbox) => {
     const {
       print,

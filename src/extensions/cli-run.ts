@@ -46,10 +46,10 @@ module.exports = (toolbox: GluegunToolbox) => {
     const LOGS: any[] = [];
     const ORIGENS: any = {
       estoque: false,
-      // formasPgto: false,
-      // produtosPromocoes: false,
-      // produtos: false,
-      // promocoes: false
+      formasPgto: false,
+      produtosPromocoes: false,
+      produtos: false,
+      promocoes: false
     };
 
     // print.info(args);
@@ -83,6 +83,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
+    LOGS.push(['Conexão DB', CONFIG_DB]);
+    LOGS.push(['Pastas CSVS', CONFIG_CSVS]);
     LOGS.push(
       [
         'Usa departamentos base',
@@ -154,6 +156,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     if (MERCADEIRO_LOJAS.length) {
       toolbox.runProjeto(
         {
+          dryRun: DRY_RUN,
           projeto: 'mercadeiro',
           lojas: MERCADEIRO_LOJAS,
           origens: Object.entries(ORIGENS)

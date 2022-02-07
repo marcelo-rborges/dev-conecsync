@@ -26,13 +26,16 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // props
     const {
-      // projeto: PROJETO,
+      dryRun: DRY_RUN,
+      projeto: PROJETO,
       apiUrl: API_URL,
       loja: LOJA,
       conexao: TIPO_CONEXAO
     } = props;
 
-    print.success(JSON.stringify(props));
+    let sequelize: any;
+
+    // print.success(JSON.stringify(props));
     // print.success(TIPO_CONEXAO);
 
     // Verifica configuração da conexão selecionada
@@ -67,14 +70,14 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
 
     try {
-      const SEQUELIZE = await sequelizeConn(TIPO_CONEXAO);
+      sequelize = await sequelizeConn(TIPO_CONEXAO);
 
-      const Produtos = SEQUELIZE.define(
+      const Produtos = sequelize.define(
         'Produto',
         CAMPOS_PRODUTOS,
         {
           timestamps: false,
-          SEQUELIZE,
+          sequelize,
           modelName: 'Produto',
           tableName: get(produtosJson, 'nomeView') || ''
         }
@@ -107,7 +110,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       // print.success(PRODUTOS_NBARCODES.length);
       toolbox.runSyncProdutos(
         {
-          tokenLoja: get(LOJA, 'token'),
+          dryRun: DRY_RUN,
+          projeto: PROJETO,
+          loja: LOJA,
           apiUrl: API_URL,
           produtos: {
             barcodes: PRODUTOS_BARCODES,
@@ -118,6 +123,10 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     } catch (error) {
       print.error(get(error, 'message'));
+    } finally {
+      if (sequelize) {
+        await sequelize.close();
+      };
     } // try-catch
   };
 }

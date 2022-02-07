@@ -27,6 +27,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // props
     const {
+      dryRun: DRY_RUN,
       projeto: PROJETO,
       lojas: LOJAS,
       origens: ORIGENS
@@ -37,19 +38,19 @@ module.exports = (toolbox: GluegunToolbox) => {
     // "/config/config.json"
     const { sandbox: CONFIG_SANDBOX } = configJson;
 
-    print.newline();
-    print.table(
-      [
-        [PROJETO, `${LOJAS.length} loja(s) encontrada(s).`]
-      ],
-      { format: 'lean' }
-    );
-
     // apis
     const API_URL: string = CONFIG_SANDBOX
       ? API_URLS[PROJETO].sandbox
       : API_URLS[PROJETO].producao;
-    print.warning(API_URL);
+    print.newline();
+    print.table(
+      [
+        [PROJETO, `${LOJAS.length} loja(s) encontrada(s).`],
+        ['API URL', API_URL]
+      ],
+      { format: 'lean' }
+    );
+    // print.warning(API_URL);
 
     for (const LOJA of LOJAS) {
       print.newline();
@@ -60,6 +61,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           case 'produtos':
             toolbox.runOrigemProdutos(
               {
+                dryRun: DRY_RUN,
                 projeto: PROJETO,
                 apiUrl: API_URL,
                 loja: LOJA,
