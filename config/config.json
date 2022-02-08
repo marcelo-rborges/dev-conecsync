@@ -1,6 +1,34 @@
 {
-  "db": "mysql", 
+  "db": "mysql",
   "csvs": "",
-  "sandbox": true  ,
-  "usaDepartamentosBase": false
+  "sandbox": true,
+  "usaDepartamentosBase": false,
+  "qtdeAutoDestaque": 10,
+  "origens": {
+    "estoque": {
+      "nomeView": "",
+      "arquivoCsv": "",
+      "schemaNoSql": false
+    },
+    "formasPgto": {
+      "nomeView": "",
+      "arquivoCsv": "",
+      "schemaNoSql": false
+    },
+    "produtosPromocoes": {
+      "nomeView": "",
+      "arquivoCsv": "",
+      "schemaNoSql": false
+    },
+    "produtos": {
+      "nomeView": "",
+      "arquivoCsv": "",
+      "schemaNoSql": false
+    },
+    "promocoes": {
+      "nomeView": "",
+      "arquivoCsv": "",
+      "schemaNoSql": false
+    }
+  }
 }
