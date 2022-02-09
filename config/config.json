@@ -1,5 +1,5 @@
 {
-  "db": "mysql",
+  "db": "",
   "csvs": "",
   "sandbox": true,
   "usaDepartamentosBase": false,
