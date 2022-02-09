@@ -22,24 +22,24 @@ CREATE VIEW view_conecsync_produtos (
   loja_id
 ) AS
 SELECT
-  seu_id,
-  COALESCE (seu_barcode, ""),
+  COALESCE(seu_id, 0),
+  COALESCE (seu_barcode, ''),
   COALESCE (seu_preco, 0),
-  seu_id_grupo,
-  COALESCE (seu_nome_grupo, ""),
-  seu_ativo_grupo,
-  seu_id_subgrupo,
-  COALESCE (seu_nome_subgrupo, ""),
-  seu_ativo_subgrupo,
-  COALESCE (seu_nome, ""),
+  COALESCE(seu_id_grupo, 0),
+  COALESCE (seu_nome_grupo, ''),
+  COALESCE(seu_ativo_grupo, 1),
+  COALESCE(seu_id_subgrupo, 1),
+  COALESCE (seu_nome_subgrupo, ''),
+  COALESCE(seu_ativo_subgrupo, 1),
+  COALESCE (seu_nome, ''),
   COALESCE (sua_qtde_estoque_min, 0),
   COALESCE (sua_qtde_estoque_atual, 0),
-  seu_atacado_status,
+  COALESCE(seu_atacado_status, 0),
   COALESCE (seu_valor_atacado, 0),
   COALESCE (sua_qtde_atacado, 0),
-  COALESCE (seu_fracionado_tipo, ""),
-  seu_ativo,
-  seu_id_loja
+  COALESCE (seu_fracionado_tipo, ''),
+  COALESCE(seu_ativo, 1),
+  COALESCE(seu_id_loja, 0)
 FROM
   sua_tabela_produtos
   LEFT JOIN sua_tabela_grupos AS departamentos ON produtos.pro_fk_grupo = departamentos.gru_pk
