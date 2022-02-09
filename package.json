@@ -32,11 +32,13 @@
     "lodash": "^4.17.21",
     "mariadb": "^2.5.1",
     "mysql2": "^2.2.5",
+    "node-firebird": "^1.0.0",
     "object-hash": "^2.2.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.15.0",
-    "simple-json-db": "^1.2.3"
+    "simple-json-db": "^1.2.3",
+    "ts-node": "^10.5.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

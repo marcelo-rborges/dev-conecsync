@@ -55,7 +55,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.info(args);
     // print.info(parameters.options.dryRun);
     const DRY_RUN: boolean = !!(
-      (props || '').toLowerCase() === '--dry-run'
+      (props || '').toLowerCase().trim().replace(/-/g,'') === 'dryrun'
       || parameters.options.dryRun
     );
     // print.info(DRY_RUN);
@@ -80,7 +80,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       db: CONFIG_DB,
       csvs: CONFIG_CSVS,
       sandbox: CONFIG_SANDBOX,
-      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE
+      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
+      qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
     LOGS.push(['Conexão DB', CONFIG_DB]);
@@ -89,6 +90,11 @@ module.exports = (toolbox: GluegunToolbox) => {
       [
         'Usa departamentos base',
         CONFIG_USA_DEPARTAMENTOS_BASE ? 'HABILITADO' : 'desabilitado'
+      ]
+    );
+    LOGS.push(
+      [
+        'Qtde auto destaque', String(QTDE_AUTO_DESTAQUE)
       ]
     );
     LOGS.push(
@@ -160,7 +166,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           projeto: 'mercadeiro',
           lojas: MERCADEIRO_LOJAS,
           origens: Object.entries(ORIGENS)
-            .filter((origem: any) => origem[1])
+            .filter((origem: any) => !!origem[1])
             .map((origem: any) => String(origem[0]))
         }
       );

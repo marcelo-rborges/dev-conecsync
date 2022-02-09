@@ -4,6 +4,7 @@ const { http } = require('gluegun');
 //#endregion
 
 //#region 3rd
+const fs = require('fs');
 import {
   get,
   uniqBy
@@ -26,8 +27,23 @@ const configJson = require('../../config/config.json');
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.runSyncProdutos = async (props: any) => {
     const { print } = toolbox;
+    // const QTDE_AUTO_DESTAQUE: number = 10;
+
+    function hasSub(
+      keys: any[] = [],
+      key: string = ''
+    ): boolean {
+      // key.includes(`${key}_`)
+      if (keys.length && key) {
+        const KEY: string = `${key}_`;
+        return keys.some(key => key.startsWith(KEY));
+      } // if
+      return false;
+    }
 
     // const LOGS: any[] = [];
+
+    const AUTO_DESTAQUES: any = {};
 
     const {
       dryRun: DRY_RUN,
@@ -42,16 +58,18 @@ module.exports = (toolbox: GluegunToolbox) => {
     } = LOJA;
 
     // JSONdb
+    const DIR: string = `./hashes/${PROJETO}/lojas/${LOJA_ID}`;
+    if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });
     const DB_DEPTOS = new JSONdb(
-      `${PROJETO}/lojas/${LOJA_ID}/departamentos.db`,
+      `${DIR}/departamentos.db`,
       { asyncWrite: false }
     );
     const DB_SUBS = new JSONdb(
-      `${PROJETO}/lojas/${LOJA_ID}/subdepartamentos.db`,
+      `${DIR}/subdepartamentos.db`,
       { asyncWrite: false }
     );
     const DB_PRODUTOS = new JSONdb(
-      `${PROJETO}/lojas/${LOJA_ID}/produtos.db`,
+      `${DIR}/produtos.db`,
       { asyncWrite: false }
     );
 
@@ -61,9 +79,14 @@ module.exports = (toolbox: GluegunToolbox) => {
       headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` },
     });
 
+    const { ok: OK, data: DATA } = await API.get('/produtos/some');
+    const HAS_PRODUTOS: boolean = OK ? !!get(DATA, 'some') : false;
+
     const {
-      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE
+      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
+      qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
     } = configJson;
+    // print.debug(QTDE_AUTO_DESTAQUE);
 
     const PRODUTOS_BARCODES: any[] = get(props, 'produtos.barcodes') || [];
     const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
@@ -88,6 +111,26 @@ module.exports = (toolbox: GluegunToolbox) => {
         SUBS_BARCODES.concat(SUBS_NBARCODES),
         'subdepartamento_id'
       );
+      // print.debug(SUBS_ALL);
+      if (!HAS_PRODUTOS) {
+        DEPTOS_ALL.forEach((d: any) =>
+          AUTO_DESTAQUES[`${get(d, 'departamento_id')}`] = QTDE_AUTO_DESTAQUE
+        );
+        SUBS_ALL.forEach((d: any) =>
+          AUTO_DESTAQUES[`${get(d, 'departamento_id')}_${get(d, 'subdepartamento_id')}`] = QTDE_AUTO_DESTAQUE
+        );
+        // AUTO_DESTAQUES: Object.entries
+        const KEYS = Object.keys(AUTO_DESTAQUES);
+        KEYS.forEach((key: string) => {
+          if (
+            !key.includes('_')
+            && hasSub(KEYS, key)
+          ) {
+            AUTO_DESTAQUES[key] = 0;
+          } // if
+        });
+      } // if
+      // print.debug(AUTO_DESTAQUES);
 
       print.table(
         [
@@ -120,13 +163,14 @@ module.exports = (toolbox: GluegunToolbox) => {
           };
           const HASH_DEPTO: string = HASH(DEPTO_BODY);
           const DB_HASH_DEPTO = get(DB_DEPTOS.get(DEPTO_ID), 'hash');
-          DB_DEPTOS.set(
-            DEPTO_ID,
-            { hash: HASH_DEPTO }
-          );
           if (!DRY_RUN) {
             try {
+              DB_DEPTOS.set(
+                DEPTO_ID,
+                { hash: HASH_DEPTO }
+              );
               if (HASH_DEPTO !== DB_HASH_DEPTO) {
+                // console.log(HASH_DEPTO, DB_HASH_DEPTO);
                 await API.post(
                   `/departamentos/${DEPTO_ID}`,
                   DEPTO_BODY
@@ -139,6 +183,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             } // try-catch
           } else {
             if (HASH_DEPTO !== DB_HASH_DEPTO) {
+              // console.log(HASH_DEPTO, DB_HASH_DEPTO);
               print.highlight(`DRY-RUN: #${DEPTO_ID} ${JSON.stringify(DEPTO_BODY)}`);
               print.divider();
             } // if
@@ -151,6 +196,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.divider();
       for (const SUB of SUBS_SYNC) {
         const SUB_ID: string = get(SUB, 'subdepartamento_id');
+        const DEPTO_ID: string = get(SUB, 'departamento_id');
         if (SUB_ID) {
           const SUB_BODY = {
             nome: get(SUB, 'subdepartamento_nome'),
@@ -166,7 +212,7 @@ module.exports = (toolbox: GluegunToolbox) => {
               );
               if (HASH_SUB !== DB_HASH_SUB) {
                 await API.post(
-                  `/subdepartamentos/${SUB_ID}`,
+                  `/departamentos/${DEPTO_ID}/subdepartamentos/${SUB_ID}`,
                   SUB_BODY
                 );
                 print.success(JSON.stringify(SUB_BODY));
@@ -191,8 +237,10 @@ module.exports = (toolbox: GluegunToolbox) => {
       for (const PRODUTO of PRODUTOS_ALL) {
         // TODO: Calcular estoqueCritico usando qtde_estoque_minimo <-> qtde_estoque_atual
         const PROD_ID: string = String(get(PRODUTO, 'id'));
+        const DEPTO_ID: string = String(get(PRODUTO, 'departamento_id') || '');
+        const SUB_ID: string = String(get(PRODUTO, 'subdepartamento_id') || '');
         if (PROD_ID) {
-          const PROD_BODY = {
+          const PROD_BODY: any = {
             "atacado": {
               "status": !!chkBool(get(PRODUTO, 'atacado_status')),
               "qtde": Number(get(PRODUTO, 'atacado_qtde') || 0),
@@ -203,7 +251,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             "estoqueCritico": false, // chkBool(get(PRODUTO, 'ativo')),
             "departamento": {
               "ativo": !!chkBool(get(PRODUTO, 'departamento_ativo')),
-              "id": String(get(PRODUTO, 'departamento_id') || ''),
+              "id": DEPTO_ID,
               "nome": get(PRODUTO, 'departamento_nome') || '',
             },
             // "destaque": !!(Math.random() < 0.5),
@@ -216,12 +264,22 @@ module.exports = (toolbox: GluegunToolbox) => {
             "preco": Number(get(PRODUTO, 'preco') || 0),
             "subdepartamento": {
               "ativo": !!chkBool(get(PRODUTO, 'subdepartamento_ativo', true)),
-              "id": String(get(PRODUTO, 'subdepartamento_id') || ''),
+              "id": SUB_ID,
               "nome": get(PRODUTO, 'subdepartamento_nome') || '',
             },
             "tipoUnidadeFracao": get(PRODUTO, 'tipo_unidade_fracao') || '',
             "usaDepartamentoBase": !!chkBool(get(PRODUTO, 'usaDepartamentoBase')),
           };
+
+          if (!HAS_PRODUTOS) {
+            const KEY: string = !!SUB_ID ? `${DEPTO_ID}_${SUB_ID}` : DEPTO_ID;
+            const QTDE: number = Number(get(AUTO_DESTAQUES, KEY, 0));
+            if (QTDE > 0) {
+              AUTO_DESTAQUES[KEY] = QTDE - 1;
+              PROD_BODY.destaque = true;
+            } // if
+          } // if
+
           const HASH_PROD: string = HASH(PROD_BODY);
           const DB_HASH_PROD = get(DB_PRODUTOS.get(PROD_ID), 'hash');
           if (!DRY_RUN) {

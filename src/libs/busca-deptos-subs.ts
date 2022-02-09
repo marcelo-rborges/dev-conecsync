@@ -25,13 +25,17 @@ export function buscaDeptosSubs(produtos: any[]): {
       ));
 
     const SUBS: any[] = produtos
-      .map((p: any) => (
-        {
+      .filter((p: any) => !!(get(p, 'subdepartamento_id') || 0))
+      .map((p: any) => {
+        // console.log(p);
+        return {
+          departamento_id: get(p, 'departamento_id'),
           subdepartamento_id: get(p, 'subdepartamento_id'),
           subdepartamento_nome: get(p, 'subdepartamento_nome'),
           subdepartamento_ativo: get(p, 'subdepartamento_ativo')
         }
-      ));
+      }
+      );
 
     RETORNO.departamentos = (uniqBy(DEPTOS, 'departamento_id') || [])
       .filter((v: any) => !!get(v, 'departamento_id'));
