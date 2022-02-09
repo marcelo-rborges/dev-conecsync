@@ -21,7 +21,7 @@
       "schemaNoSql": false
     },
     "produtos": {
-      "nomeView": "view_conecsync_produtos",
+      "nomeView": "",
       "arquivoCsv": "",
       "schemaNoSql": false
     },
