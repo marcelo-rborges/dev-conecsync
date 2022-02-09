@@ -1,4 +1,4 @@
 {
-  "tipoConexao": "mysql", 
+  "tipoConexao": "firebird", 
   "nomeView": "view_conecsync_produtos" 
 }

@@ -1,5 +1,5 @@
 {
-  "db": "mysql",
+  "db": "firebird",
   "csvs": "",
   "sandbox": true,
   "usaDepartamentosBase": false,
@@ -21,7 +21,7 @@
       "schemaNoSql": false
     },
     "produtos": {
-      "nomeView": "",
+      "nomeView": "view_conecsync_produtos",
       "arquivoCsv": "",
       "schemaNoSql": false
     },

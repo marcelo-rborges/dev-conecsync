@@ -34,6 +34,15 @@ module.exports = (toolbox: GluegunToolbox) => {
         break;
 
       case 'firebird':
+        toolbox.runOrigemProdutosFirebird(
+          {
+            dryRun: DRY_RUN,
+            projeto: PROJETO,
+            apiUrl: API_URL,
+            loja: LOJA,
+            conexao: TIPO_CONEXAO
+          }
+        );
         break;
 
       case 'mariadb':
