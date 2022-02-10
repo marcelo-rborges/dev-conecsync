@@ -7,7 +7,8 @@ import { GluegunToolbox } from 'gluegun';
 //#endregion 
 
 //#region models
-const produtosJson = require('../../config/origens/produtos.json');
+// const produtosJson = require('../../config/origens/produtos.json');
+const configJson = require('../../config/config.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -24,7 +25,9 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // print.success(JSON.stringify(props));
 
-    const { tipoConexao: TIPO_CONEXAO } = produtosJson;
+    const { db: TIPO_CONEXAO } = configJson;
+
+    // print.highlight(TIPO_CONEXAO)
 
     switch (TIPO_CONEXAO) {
       case 'csv':

@@ -98,7 +98,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
 
     try {
-
+      
       if (FIREBIRD) {
         FIREBIRD.attach(
           firebirdJson,

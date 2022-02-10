@@ -36,7 +36,8 @@ module.exports = (toolbox: GluegunToolbox) => {
         const { nomeView } = origem;
         const { db } = config;
         if (SUPPORTED_SQLS.includes(db)) {
-          print.warning(db);
+          // print.warning(db);
+          // print.warning(!!nomeView);
           return !!nomeView;
         } else {
           return SUPPORTED_NOSQLS.includes(db);
@@ -124,7 +125,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     ORIGENS.produtos = origemOk(produtosJson, configJson);
     ORIGENS.promocoes = origemOk(promocoesJson, configJson);
 
-    print.warning(JSON.stringify(ORIGENS));
+    // print.warning(JSON.stringify(ORIGENS));
 
     if (
       !ORIGENS.estoque
