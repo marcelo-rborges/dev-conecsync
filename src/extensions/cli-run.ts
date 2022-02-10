@@ -31,13 +31,15 @@ module.exports = (toolbox: GluegunToolbox) => {
       print
     } = toolbox;
 
-    function origemOk(origem: any): boolean {
+    function origemOk(origem: any, config: any): boolean {
       if (origem) {
-        const { tipoConexao, nomeView } = origem;
-        if (SUPPORTED_SQLS.includes(tipoConexao)) {
+        const { nomeView } = origem;
+        const { db } = config;
+        if (SUPPORTED_SQLS.includes(db)) {
+          print.warning(db);
           return !!nomeView;
         } else {
-          return SUPPORTED_NOSQLS.includes(tipoConexao);
+          return SUPPORTED_NOSQLS.includes(db);
         }// else
       } // else
       return false;
@@ -116,13 +118,13 @@ module.exports = (toolbox: GluegunToolbox) => {
       return;
     } // if
 
-    ORIGENS.estoque = origemOk(estoqueJson);
-    ORIGENS.formasPgto = origemOk(formasPgtoJson);
-    ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson);
-    ORIGENS.produtos = origemOk(produtosJson);
-    ORIGENS.promocoes = origemOk(promocoesJson);
+    ORIGENS.estoque = origemOk(estoqueJson, configJson);
+    ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson);
+    ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson, configJson);
+    ORIGENS.produtos = origemOk(produtosJson, configJson);
+    ORIGENS.promocoes = origemOk(promocoesJson, configJson);
 
-    // print.warning(JSON.stringify(ORIGENS));
+    print.warning(JSON.stringify(ORIGENS));
 
     if (
       !ORIGENS.estoque

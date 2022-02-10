@@ -1,4 +1,5 @@
 {
-  "tipoConexao": "", 
-  "nomeView": "" 
+  "nomeView": "view_mercadeiro_conecdata",
+  "arquivoCsv": "",
+  "schemaNoSql": false
 }
