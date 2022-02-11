@@ -27,48 +27,12 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // props
     const {
-      //   dryRun: DRY_RUN,
-      //   projeto: PROJETO,
-      //   apiUrl: API_URL,
-      //   loja: LOJA,
+        dryRun: DRY_RUN,
+        projeto: PROJETO,
+        apiUrl: API_URL,
+        loja: LOJA,
       // conexao: TIPO_CONEXAO
     } = props;
-
-    let sequelize: any;
-
-    // print.success(JSON.stringify(props));
-    // print.success(TIPO_CONEXAO);
-
-    // Verifica configuração da conexão selecionada
-    // const CONEXOES = {
-    //   mariadb: mariadbJson,
-    //   mysql: mysqlJson,
-    //   mssql: mssqlJson,
-    //   postgresql: postgresqlJson,
-    // };
-
-    // const {
-    //   host: HOST,
-    //   tabela: TABELA,
-    //   usuario: USUARIO,
-    //   senha: SENHA
-    // } = CONEXOES[TIPO_CONEXAO];
-
-    // print.warning(CONEXOES[TIPO_CONEXAO]);
-
-    // if (
-    //   !HOST
-    //   || !TABELA
-    //   || !USUARIO
-    //   || !SENHA
-    // ) {
-    //   print.error(`ERRO: Propriedade(s) da conexão ${TIPO_CONEXAO} não indicada(s).`);
-    //   print.success(`SOLUÇÃO: Indique todas propriedades de conexão em "/config/conexoes/${TIPO_CONEXAO}.json".`);
-    //   // print.info('conecsync config (exibe arquivo de configuração.');
-    //   print.divider();
-    //   toolbox.conexoes();
-    //   return;
-    // }
 
     try {
 
@@ -86,26 +50,26 @@ module.exports = (toolbox: GluegunToolbox) => {
 
       // const VALUE = 
       // fs.createReadStream()
-      fs.readFile(csvFile ,'utf8', (err, data) => {
+      fs.readFile(csvFile, 'utf8', (err, data) => {
         if (err) throw err;
 
         let rows = data.trim().split('\n');
         rows.filter(r => r.trim() && r && r[0] !== '*');
         const LR: number = rows.length;
-        let resultado = LR - 1;
-        print.info(rows);
-        print.info(`${resultado} forma(s) de pagamento`);
+        // let resultado = LR - 1;
+        // print.info(rows);
+        // print.info(`${resultado} forma(s) de pagamento`);
 
         const HEADER: string[] = rows[0].split(';');
-        print.info(`Header: ${HEADER}`);
+        // print.info(`Header: ${HEADER}`);
 
         let req: string[] = FORMAS_REQ_FIELDS;
-        print.info(req);
+        // print.info(req);
 
         const LH: number = HEADER.length;
-        for(let i = 0; i < LH; i++) {
+        for (let i = 0; i < LH; i++) {
           const FIELD: string = HEADER[i].trim().replace(SEARCH_REG_EXP, '');
-          print.highlight(FIELD);
+          // print.highlight(FIELD);
           req = req.filter(v => {
             return v.trim().toLowerCase().replace(SEARCH_REG_EXP, '') === FIELD.toLowerCase();
           });
@@ -113,7 +77,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             FIELDPOS[FIELD] = i;
           } // if
         } // for
-        print.warning(FIELDPOS);
+        // print.warning(FIELDPOS);
 
         if (req.length) {
           throw new Error(`Campos obrigatórios não indicados: ${req.join(', ')}`);
@@ -132,7 +96,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         }
 
         const FORMAS = [];
-        for(let i = 0; i < LR; i++) {
+        for (let i = 0; i < LR; i++) {
           if (i) {
             const ROW: string[] = rows[i]
               .replace(SEARCH_REG_EXP, '')
@@ -141,46 +105,37 @@ module.exports = (toolbox: GluegunToolbox) => {
               .map((r: string) => r.toLowerCase() === 'null' ? '' : r.trim());
             const FORMA = {
               'id_interno': FIELDPOS['id_interno'] >= 0
-              ? `${ROW[FIELDPOS['id_interno']].trim()}`
-              : '',
+                ? `${ROW[FIELDPOS['id_interno']].trim()}`
+                : '',
 
               'id_externo': FIELDPOS['id_externo'] >= 0
-              ? `${ROW[FIELDPOS['id_externo']].trim()}`
-              : '',
+                ? `${ROW[FIELDPOS['id_externo']].trim()}`
+                : '',
 
               'id_loja': FIELDPOS['id_loja'] >= 0
-              ? `${ROW[FIELDPOS['id_loja']].trim()}`
-              : '',
+                ? `${ROW[FIELDPOS['id_loja']].trim()}`
+                : '',
 
               'ativo': FIELDPOS['ativo'] >= 0
-              ? chkBool(ROW[FIELDPOS['ativo']] || '')
-              : true
+                ? chkBool(ROW[FIELDPOS['ativo']] || '')
+                : true
             };
             FORMAS.push(FORMA);
           } // if
         } // for
-        return FORMAS;
+        print.info(FORMAS)
+        toolbox.runSyncFormasPgto(
+          {
+            dryRun: DRY_RUN,
+            projeto: PROJETO,
+            loja: LOJA,
+            apiUrl: API_URL,
+            formasPgto: JSON.stringify(FORMAS)
+          }
+        );
       });
-
-      // toolbox.runSyncProdutos(
-      //   {
-      //     dryRun: DRY_RUN,
-      //     projeto: PROJETO,
-      //     loja: LOJA,
-      //     apiUrl: API_URL,
-      //     produtos: {
-      //       barcodes: PRODUTOS_BARCODES,
-      //       nbarcodes: PRODUTOS_NBARCODES
-      //     }
-      //   }
-      // );
-
     } catch (error) {
       print.error(get(error, 'message'));
-    } finally {
-      if (sequelize) {
-        await sequelize.close();
-      };
     } // try-catch
   };
 }

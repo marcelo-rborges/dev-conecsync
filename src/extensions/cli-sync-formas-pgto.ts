@@ -4,7 +4,7 @@ import { GluegunToolbox } from 'gluegun';
 //#endregion
 
 //#region 3rd
-// const fs = require('fs');
+const fs = require('fs');
 // import {
 //   get,
 //   uniqBy
@@ -47,29 +47,21 @@ module.exports = (toolbox: GluegunToolbox) => {
     const {
       // dryRun: DRY_RUN,
       // apiUrl: API_URL,
-      // projeto: PROJETO,
-      loja: LOJA
+      projeto: PROJETO,
+      loja: LOJA,
+      // formasPgto: FORMAS_PGTO
     } = props;
 
     const {
-      // id: LOJA_ID,
+      id: LOJA_ID,
       // token: LOJA_TOKEN
     } = LOJA;
 
     // JSONdb
-    // VOLTAR AQUI
-    // const DIR: string = `./hashes/${PROJETO}/formas-pgto/${LOJA_ID}`;
-    // if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });
-    // const DB_DEPTOS = new JSONdb(
-    //   `${DIR}/departamentos.db`,
-    //   { asyncWrite: false }
-    // );
-    // const DB_SUBS = new JSONdb(
-    //   `${DIR}/subdepartamentos.db`,
-    //   { asyncWrite: false }
-    // );
-    // const DB_PRODUTOS = new JSONdb(
-    //   `${DIR}/produtos.db`,
+    const DIR: string = `./hashes/${PROJETO}/formas-pgto/${LOJA_ID}`;
+    if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });
+    // const DB_FORMAS_PGTO = new JSONdb(
+    //   `${DIR}/formasPgto.db`,
     //   { asyncWrite: false }
     // );
 
@@ -89,64 +81,8 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.success(PRODUTOS_NBARCODES.length);
 
     try {
-      // const {
-      //   departamentos: DEPTOS_BARCODES,
-      //   subdepartamentos: SUBS_BARCODES
-      // } = buscaDeptosSubs(PRODUTOS_BARCODES);
-      // const {
-      //   departamentos: DEPTOS_NBARCODES,
-      //   subdepartamentos: SUBS_NBARCODES
-      // } = buscaDeptosSubs(PRODUTOS_NBARCODES);
-      // const DEPTOS_ALL: any[] = uniqBy(
-      //   DEPTOS_BARCODES.concat(DEPTOS_NBARCODES),
-      //   'departamento_id'
-      // );
-      // const SUBS_ALL: any[] = uniqBy(
-      //   SUBS_BARCODES.concat(SUBS_NBARCODES),
-      //   'subdepartamento_id'
-      // );
-      // // print.debug(SUBS_ALL);
-      // if (!HAS_PRODUTOS) {
-      //   DEPTOS_ALL.forEach((d: any) =>
-      //     AUTO_DESTAQUES[`${get(d, 'departamento_id')}`] = QTDE_AUTO_DESTAQUE
-      //   );
-      //   SUBS_ALL.forEach((d: any) =>
-      //     AUTO_DESTAQUES[`${get(d, 'departamento_id')}_${get(d, 'subdepartamento_id')}`] = QTDE_AUTO_DESTAQUE
-      //   );
-      //   // AUTO_DESTAQUES: Object.entries
-      //   const KEYS = Object.keys(AUTO_DESTAQUES);
-      //   KEYS.forEach((key: string) => {
-      //     if (
-      //       !key.includes('_')
-      //       && hasSub(KEYS, key)
-      //     ) {
-      //       AUTO_DESTAQUES[key] = 0;
-      //     } // if
-      //   });
-      // } // if
-      // // print.debug(AUTO_DESTAQUES);
-
-      // print.table(
-      //   [
-      //     ['Produto(s) encontrado(s)', String(PRODUTOS_ALL.length)],
-      //     ['Departamento(s) encontrado(s)', String(DEPTOS_ALL.length)],
-      //     ['Subdepartamento(s) encontrado(s)', String(SUBS_ALL.length)],
-      //   ],
-      //   { format: 'lean' }
-      // );
-
-      // const DEPTOS_SYNC: any[] = [...DEPTOS_NBARCODES];
-      // const DEPTOS_SYNC: any[] = CONFIG_USA_DEPARTAMENTOS_BASE
-      //   ? DEPTOS_NBARCODES
-      //   : DEPTOS_ALL;
-      // const SUBS_SYNC: any[] = CONFIG_USA_DEPARTAMENTOS_BASE
-      //   ? SUBS_NBARCODES
-      //   : SUBS_ALL;
-
-      // print.table([...LOGS], { format: 'lean' });
-
       print.divider();
-      print.warning('Sincronizando departamentos...');
+      print.warning('Sincronizando Formas de pagamento...');
       print.divider();
       // for (const DEPTO of DEPTOS_SYNC) {
       //   const DEPTO_ID: string = get(DEPTO, 'departamento_id');
