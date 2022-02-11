@@ -1,6 +1,6 @@
 {
-  "db": "firebird",
-  "csvs": "",
+  "db": "",
+  "csvs": "/home/dev01/Área de Trabalho",
   "sandbox": true,
   "usaDepartamentosBase": false,
   "qtdeAutoDestaque": 10

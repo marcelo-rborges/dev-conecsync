@@ -33,14 +33,14 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     function origemOk(origem: any, config: any): boolean {
       if (origem) {
-        const { nomeView } = origem;
-        const { db } = config;
+        const { nomeView, arquivoCsv } = origem;
+        const { db, csvs } = config;
         if (SUPPORTED_SQLS.includes(db)) {
-          // print.warning(db);
-          // print.warning(!!nomeView);
           return !!nomeView;
-        } else {
+        } else if (SUPPORTED_NOSQLS.includes(db)) {
           return SUPPORTED_NOSQLS.includes(db);
+        } else if (csvs !== '' && arquivoCsv !== '') {
+          return true;
         }// else
       } // else
       return false;
