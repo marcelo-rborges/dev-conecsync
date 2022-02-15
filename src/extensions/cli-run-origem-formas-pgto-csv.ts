@@ -123,7 +123,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             FORMAS.push(FORMA);
           } // if
         } // for
-        print.info(FORMAS)
+        // print.info(FORMAS)
         toolbox.runSyncFormasPgto(
           {
             dryRun: DRY_RUN,

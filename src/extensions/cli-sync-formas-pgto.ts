@@ -49,7 +49,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       // apiUrl: API_URL,
       projeto: PROJETO,
       loja: LOJA,
-      // formasPgto: FORMAS_PGTO
+      formasPgto: FORMAS_PGTO
     } = props;
 
     const {
@@ -84,6 +84,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.divider();
       print.warning('Sincronizando Formas de pagamento...');
       print.divider();
+
+      print.info(FORMAS_PGTO);
+      
       // for (const DEPTO of DEPTOS_SYNC) {
       //   const DEPTO_ID: string = get(DEPTO, 'departamento_id');
       //   if (DEPTO_ID) {
