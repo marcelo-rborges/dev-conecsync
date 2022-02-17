@@ -130,7 +130,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             projeto: PROJETO,
             loja: LOJA,
             apiUrl: API_URL,
-            formasPgto: JSON.stringify(FORMAS)
+            formasPgto: FORMAS
           }
         );
       });

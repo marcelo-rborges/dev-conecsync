@@ -1,6 +1,6 @@
 //#region gluegun
 import { GluegunToolbox } from 'gluegun';
-// const { http } = require('gluegun');
+const { http } = require('gluegun');
 //#endregion
 
 //#region 3rd
@@ -46,7 +46,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     const {
       // dryRun: DRY_RUN,
-      // apiUrl: API_URL,
+      apiUrl: API_URL,
       projeto: PROJETO,
       loja: LOJA,
       formasPgto: FORMAS_PGTO
@@ -54,7 +54,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     const {
       id: LOJA_ID,
-      // token: LOJA_TOKEN
+      token: LOJA_TOKEN
     } = LOJA;
 
     // JSONdb
@@ -64,6 +64,15 @@ module.exports = (toolbox: GluegunToolbox) => {
     //   `${DIR}/formasPgto.db`,
     //   { asyncWrite: false }
     // );
+    const API = http.create({
+      baseURL: API_URL,
+      headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` },
+    });
+
+    // const {
+    //   ok: OK,
+    // } = await API.get('/formas-pgto');
+    // const HAS_PRODUTOS: boolean = OK ? !!get(DATA, 'some') : false;
 
     // print.warning(props);
     // const API = http.create({
@@ -85,8 +94,21 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.warning('Sincronizando Formas de pagamento...');
       print.divider();
 
-      print.info(FORMAS_PGTO);
-      
+      // print.info(FORMAS_PGTO);
+
+      FORMAS_PGTO.map(async el => {
+        // print.info(el.id_interno);
+        await API.post(`/formas-pgto/${el.id_interno}`)
+        const { ok: OK } = await API.get('/formas-pgto');
+        print.info(OK)
+        // const teste  = await API.get('/formas-pgto/');
+      })
+      // const { ok: OK,
+      //   // data: DATA
+      // } = await API.get('/formas-pgto/');
+      // print.info(OK)
+
+
       // for (const DEPTO of DEPTOS_SYNC) {
       //   const DEPTO_ID: string = get(DEPTO, 'departamento_id');
       //   if (DEPTO_ID) {
@@ -124,7 +146,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       //   } // if
       // } // for
 
-      
+
       // LOGS = [];
 
       // print.info(LOJA_TOKEN);
