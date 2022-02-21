@@ -73,7 +73,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       case 'mariadb':
       case 'mssql':
       case 'mysql':
-      case 'postgresql':
+      case 'postgres':
         // toolbox.runOrigemProdutosSequelize(
         //   {
         //     dryRun: DRY_RUN,

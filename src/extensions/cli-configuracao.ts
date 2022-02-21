@@ -31,7 +31,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         ['db (opcional)', 'Seleção de tipo de conexão com banco de dados.'],
       ]
     );
-    print.highlight("  Opções disponíveis: '' | 'firebird' | 'mariadb' | 'mongodb' | 'mssql' | 'mysql' | 'postgresql'.");
+    print.highlight("  Opções disponíveis: '' | 'firebird' | 'mariadb' | 'mongodb' | 'mssql' | 'mysql' | 'postgres'.");
     print.divider();
 
     print.table(

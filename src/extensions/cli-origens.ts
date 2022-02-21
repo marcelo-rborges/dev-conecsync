@@ -35,7 +35,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         ['tipoConexao', 'Formato a ser utilizado na coleta de dados dessa origem.']
       ]
     );
-    print.highlight("  Opções disponíveis: '' | 'csv' | 'mongodb' | 'firebird'* | 'mariadb'* | 'mssql'* | 'mysql'* | 'postgresql'*");
+    print.highlight("  Opções disponíveis: '' | 'csv' | 'mongodb' | 'firebird'* | 'mariadb'* | 'mssql'* | 'mysql'* | 'postgres'*");
     print.warning(
       "- * exigem também a indicação de 'nomeView' (ou essa origem será ignorada)."
     );

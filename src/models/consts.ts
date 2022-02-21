@@ -8,7 +8,7 @@ const {
 //#endregion
 
 //#region dbs
-export const SUPPORTED_SQLS = ['firebird', 'mariadb', 'mssql', 'mysql', 'postgresql'];
+export const SUPPORTED_SQLS = ['firebird', 'mariadb', 'mssql', 'mysql', 'postgres'];
 export const SUPPORTED_NOSQLS = ['mongodb'];
 export const SUPPORTED_ALL = [...SUPPORTED_SQLS, ...SUPPORTED_NOSQLS];
 //#endregion

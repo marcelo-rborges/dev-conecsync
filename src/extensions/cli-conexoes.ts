@@ -13,7 +13,7 @@ const mariadb = require('../../config/conexoes/mariadb.json');
 // const mongodb = require('../../config/conexoes/mongodb.json');
 const mssql = require('../../config/conexoes/mssql.json');
 const mysql = require('../../config/conexoes/mysql.json');
-const postgresql = require('../../config/conexoes/postgresql.json');
+const postgres = require('../../config/conexoes/postgres.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -82,16 +82,16 @@ module.exports = (toolbox: GluegunToolbox) => {
       NCONFIG.push(['mysql', JSON.stringify(mysql)]);
     } // else
 
-    // postgresql
+    // postgres
     if (
-      get(postgresql, 'host')
-      && get(postgresql, 'tabela')
-      && get(postgresql, 'usuario')
-      && get(postgresql, 'senha')
+      get(postgres, 'host')
+      && get(postgres, 'tabela')
+      && get(postgres, 'usuario')
+      && get(postgres, 'senha')
     ) {
-      CONFIG.push(['postgresql', JSON.stringify(postgresql)]);
+      CONFIG.push(['postgres', JSON.stringify(postgres)]);
     } else {
-      NCONFIG.push(['postgresql', JSON.stringify(postgresql)]);
+      NCONFIG.push(['postgres', JSON.stringify(postgres)]);
     } // else
 
     const CONFIG_LEN: number = CONFIG.length;
@@ -117,7 +117,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     //     ['MariaDB', JSON.stringify(mariadb)],
     //     ['MsSQL', JSON.stringify(mssql)],
     //     ['MySQL', JSON.stringify(mysql)],
-    //     ['PostgreSQL', JSON.stringify(postgresql)],
+    //     ['Postgres', JSON.stringify(postgres)],
     //     ['CSV', `Consulte "Verifique e configure as configurações gerais.".`]
     //   ]
     // );

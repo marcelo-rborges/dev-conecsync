@@ -1,7 +1,7 @@
 {
-  "db": "",
-  "csvs": "/home/dev01/Área de Trabalho",
+  "db": "postgresql",
+  "csvs": "",
   "sandbox": true,
-  "usaDepartamentosBase": false,
+  "usaDepartamentosBase": true,
   "qtdeAutoDestaque": 10
 }

@@ -95,6 +95,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.success(PRODUTOS_NBARCODES.length);
 
     try {
+      print.info("cli-sync-prod-ok")
       const {
         departamentos: DEPTOS_BARCODES,
         subdepartamentos: SUBS_BARCODES

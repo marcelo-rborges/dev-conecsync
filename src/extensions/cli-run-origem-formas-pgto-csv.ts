@@ -16,7 +16,7 @@ const formasPgtoJson = require('../../config/origens/formas-pgto.json');
 // const mariadbJson = require('../../config/conexoes/mariadb.json');
 // const mysqlJson = require('../../config/conexoes/mysql.json');
 // const mssqlJson = require('../../config/conexoes/mssql.json');
-// const postgresqlJson = require('../../config/conexoes/postgresql.json');
+// const postgres = require('../../config/conexoes/postgres.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {

@@ -1,6 +1,6 @@
 {
-  "type": "mongodb",
-  "host": "localhost",
-  "port": "3333",
-  "database": "studyzap"
+  "type": "",
+  "host": "",
+  "port": "",
+  "database": ""
 }
