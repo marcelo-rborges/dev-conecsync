@@ -60,8 +60,6 @@ module.exports = (toolbox: GluegunToolbox) => {
       senha: SENHA
     } = CONEXOES[TIPO_CONEXAO];
 
-    // print.warning(CONEXOES[TIPO_CONEXAO]);
-
     if (
       !HOST
       || !TABELA
@@ -90,7 +88,6 @@ module.exports = (toolbox: GluegunToolbox) => {
           tableName: get(produtosJson, 'nomeView') || ''
         }
       );
-      print.highlight(Produtos.tableName);
       
       const PRODUTOS_BARCODES = (await Produtos.findAll(
         {

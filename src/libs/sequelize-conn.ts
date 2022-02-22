@@ -24,7 +24,7 @@ export function connect(db): Promise<any> {
         SEQUELIZE[db].senha,
         {
           host: SEQUELIZE[db].host,
-          dialect: 'postgres',
+          dialect: db,
         }
       );
 

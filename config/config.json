@@ -1,7 +1,7 @@
 {
-  "db": "postgresql",
+  "db": "postgres",
   "csvs": "",
   "sandbox": true,
-  "usaDepartamentosBase": true,
+  "usaDepartamentosBase": false,
   "qtdeAutoDestaque": 10
 }

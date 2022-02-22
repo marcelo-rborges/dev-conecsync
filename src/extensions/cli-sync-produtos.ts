@@ -95,7 +95,6 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.success(PRODUTOS_NBARCODES.length);
 
     try {
-      print.info("cli-sync-prod-ok")
       const {
         departamentos: DEPTOS_BARCODES,
         subdepartamentos: SUBS_BARCODES
@@ -269,7 +268,7 @@ module.exports = (toolbox: GluegunToolbox) => {
               "nome": get(PRODUTO, 'subdepartamento_nome') || '',
             },
             "tipoUnidadeFracao": get(PRODUTO, 'tipo_unidade_fracao') || '',
-            "usaDepartamentoBase": !!chkBool(get(PRODUTO, 'usaDepartamentoBase')),
+            "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
           };
 
           if (!HAS_PRODUTOS) {
