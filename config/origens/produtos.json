@@ -1,5 +1,5 @@
 {
-  "nomeView": "view_conecsync_produtos",
+  "nomeView": "",
   "arquivoCsv": "",
-  "schemaNoSql": false
+  "schemaNoSql": true
 }

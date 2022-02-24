@@ -1,5 +1,5 @@
 {
-  "db": "postgres",
+  "db": "mongodb",
   "csvs": "",
   "sandbox": true,
   "usaDepartamentosBase": false,

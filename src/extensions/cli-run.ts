@@ -33,11 +33,11 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     function origemOk(origem: any, config: any): boolean {
       if (origem) {
-        const { nomeView, arquivoCsv } = origem;
+        const { nomeView, arquivoCsv, schemaNoSql } = origem;
         const { db, csvs } = config;
-        if (SUPPORTED_SQLS.includes(db)) {
+        if (SUPPORTED_SQLS.includes(db) && schemaNoSql === false) {
           return !!nomeView;
-        } else if (SUPPORTED_NOSQLS.includes(db)) {
+        } else if (SUPPORTED_NOSQLS.includes(db) && schemaNoSql === true) {
           return SUPPORTED_NOSQLS.includes(db);
         } else if (csvs !== '' && arquivoCsv !== '') {
           return true;
@@ -58,7 +58,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.info(args);
     // print.info(parameters.options.dryRun);
     const DRY_RUN: boolean = !!(
-      (props || '').toLowerCase().trim().replace(/-/g,'') === 'dryrun'
+      (props || '').toLowerCase().trim().replace(/-/g, '') === 'dryrun'
       || parameters.options.dryRun
     );
     // print.info(DRY_RUN);
@@ -124,6 +124,12 @@ module.exports = (toolbox: GluegunToolbox) => {
     ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson, configJson);
     ORIGENS.produtos = origemOk(produtosJson, configJson);
     ORIGENS.promocoes = origemOk(promocoesJson, configJson);
+
+    // print.highlight(ORIGENS.estoque = origemOk(estoqueJson, configJson));
+    // print.highlight(ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson));
+    // print.highlight(ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson, configJson));
+    // print.highlight(ORIGENS.produtos = origemOk(produtosJson, configJson));
+    // print.highlight(ORIGENS.promocoes = origemOk(promocoesJson, configJson));
 
     // print.warning(JSON.stringify(ORIGENS));
 

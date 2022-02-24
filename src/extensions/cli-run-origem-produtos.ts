@@ -34,15 +34,15 @@ module.exports = (toolbox: GluegunToolbox) => {
         break;
 
       case 'mongodb':
-        // toolbox.runOrigemProdutosMongoDB(
-        //   {
-        //     dryRun: DRY_RUN,
-        //     projeto: PROJETO,
-        //     apiUrl: API_URL,
-        //     loja: LOJA,
-        //     conexao: TIPO_CONEXAO
-        //   }
-        // );
+        toolbox.runOrigemProdutosMongoDB(
+          {
+            dryRun: DRY_RUN,
+            projeto: PROJETO,
+            apiUrl: API_URL,
+            loja: LOJA,
+            conexao: TIPO_CONEXAO
+          }
+        );
         break;
 
       case 'firebird':
