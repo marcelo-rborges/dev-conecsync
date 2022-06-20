@@ -42,16 +42,25 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
 
     // const LOGS: any[] = [];
-
     const AUTO_DESTAQUES: any = {};
-
+    const PRODUTO_FRACIONADO_FRACAO_DEFAULTS: any = {
+      KG: 0.5,
+      K: 0.5,
+      GR: 500,
+      G: 500,
+      LT: 0.5,
+      L: 0.5,
+      ML: 500,
+      MT: 0.5,
+      M: 0.5,
+      CM: 500,
+    };
     const {
       dryRun: DRY_RUN,
       apiUrl: API_URL,
       projeto: PROJETO,
       loja: LOJA
     } = props;
-
     const {
       id: LOJA_ID,
       token: LOJA_TOKEN
@@ -95,6 +104,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.success(PRODUTOS_NBARCODES.length);
 
     try {
+      const TIPO_UNIDADE_FRACAO: string = (get(PRODUTO, 'tipo_unidade_fracao') || '').toUppercase();
       const {
         departamentos: DEPTOS_BARCODES,
         subdepartamentos: SUBS_BARCODES
@@ -267,7 +277,8 @@ module.exports = (toolbox: GluegunToolbox) => {
               "id": SUB_ID,
               "nome": get(PRODUTO, 'subdepartamento_nome') || '',
             },
-            "tipoUnidadeFracao": get(PRODUTO, 'tipo_unidade_fracao') || '',
+            "tipoUnidadeFracao": TIPO_UNIDADE_FRACAO,
+            "fracao": get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, TIPO_UNIDADE_FRACAO) || 0,
             "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
           };
 
