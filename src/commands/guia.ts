@@ -1,4 +1,6 @@
+//#region gluegun
 import { GluegunCommand } from 'gluegun';
+//#endregion
 
 const command: GluegunCommand = {
   name: 'guia',

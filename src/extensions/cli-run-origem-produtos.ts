@@ -33,17 +33,17 @@ module.exports = (toolbox: GluegunToolbox) => {
       case 'csv':
         break;
 
-      case 'mongodb':
-        toolbox.runOrigemProdutosMongoDB(
-          {
-            dryRun: DRY_RUN,
-            projeto: PROJETO,
-            apiUrl: API_URL,
-            loja: LOJA,
-            conexao: TIPO_CONEXAO
-          }
-        );
-        break;
+      // case 'mongodb':
+      //   toolbox.runOrigemProdutosMongoDB(
+      //     {
+      //       dryRun: DRY_RUN,
+      //       projeto: PROJETO,
+      //       apiUrl: API_URL,
+      //       loja: LOJA,
+      //       conexao: TIPO_CONEXAO
+      //     }
+      //   );
+      //   break;
 
       case 'firebird':
         toolbox.runOrigemProdutosFirebird(
@@ -57,20 +57,20 @@ module.exports = (toolbox: GluegunToolbox) => {
         );
         break;
 
-      case 'mariadb':
-      case 'mssql':
-      case 'mysql':
-      case 'postgres':
-        toolbox.runOrigemProdutosSequelize(
-          {
-            dryRun: DRY_RUN,
-            projeto: PROJETO,
-            apiUrl: API_URL,
-            loja: LOJA,
-            conexao: TIPO_CONEXAO
-          }
-        );
-        break;
+      // case 'mariadb':
+      // case 'mssql':
+      // case 'mysql':
+      // case 'postgres':
+      //   toolbox.runOrigemProdutosSequelize(
+      //     {
+      //       dryRun: DRY_RUN,
+      //       projeto: PROJETO,
+      //       apiUrl: API_URL,
+      //       loja: LOJA,
+      //       conexao: TIPO_CONEXAO
+      //     }
+      //   );
+      //   break;
 
       default:
         break;

@@ -10,7 +10,8 @@ import { get } from 'lodash';
 import {
   // API_URLS,
   SUPPORTED_SQLS,
-  SUPPORTED_NOSQLS
+  SUPPORTED_NOSQLS,
+  SUPPORTED_ALL
 } from '../models/consts';
 const mercadeiro = require('../../config/destinos/mercadeiro.json');
 // const sequelizeConn = require('../libs/sequelize-conn');
@@ -31,8 +32,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       print
     } = toolbox;
 
-    function origemOk(origem: any, config: any): boolean {
-      if (origem) {
+    const origemOk = (origem: any, config: any): boolean => {
+      if (!!origem) {
         const { nomeView, arquivoCsv, schemaNoSql } = origem;
         const { db, csvs } = config;
         if (SUPPORTED_SQLS.includes(db) && schemaNoSql === false) {
@@ -63,9 +64,6 @@ module.exports = (toolbox: GluegunToolbox) => {
     );
     // print.info(DRY_RUN);
 
-    // const DB: TConexaoDb = get(config, 'db') || '';
-    // let sequelize;
-
     // node version
     const nodeVersion = await toolbox.system.run('node -v', { trim: true });
     LOGS.push(['Node js', nodeVersion]);
@@ -74,7 +72,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     LOGS.push(
       [
         'Modo diagnóstico (dry run)',
-        DRY_RUN ? 'HABILITADO' : 'desabilitado'
+        !!DRY_RUN ? 'HABILITADO' : 'desabilitado'
       ]
     );
 
@@ -83,27 +81,27 @@ module.exports = (toolbox: GluegunToolbox) => {
       db: CONFIG_DB,
       csvs: CONFIG_CSVS,
       sandbox: CONFIG_SANDBOX,
-      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
+      // usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
       qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
-    LOGS.push(['Conexão DB', CONFIG_DB]);
-    LOGS.push(['Pastas CSVS', CONFIG_CSVS]);
+    LOGS.push(['Conexão DB', CONFIG_DB || '-']);
+    LOGS.push(['Pastas CSVS', CONFIG_CSVS || '-']);
+    // LOGS.push(
+    //   [
+    //     'Usa departamentos base',
+    //     !!CONFIG_USA_DEPARTAMENTOS_BASE ? 'HABILITADO' : 'desabilitado'
+    //   ]
+    // );
     LOGS.push(
       [
-        'Usa departamentos base',
-        CONFIG_USA_DEPARTAMENTOS_BASE ? 'HABILITADO' : 'desabilitado'
-      ]
-    );
-    LOGS.push(
-      [
-        'Qtde auto destaque', String(QTDE_AUTO_DESTAQUE)
+        'Qtde auto destaque', Number(QTDE_AUTO_DESTAQUE) || 0
       ]
     );
     LOGS.push(
       [
         'Modo sandbox',
-        CONFIG_SANDBOX ? 'habilitado' : 'DESABILITADO'
+        !!CONFIG_SANDBOX ? 'habilitado' : 'DESABILITADO'
       ]
     );
 
@@ -111,13 +109,25 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.table([...LOGS], { format: 'lean' });
       print.divider();
       print.error('ERRO: Nenhuma fonte de origens de dados indicada.');
-      print.success('SOLUÇÃO: Indique um tipo de conexão de banco de dados desejado ou uma pasta para arquivos .csv em "/config/config.json".');
+      print.success('SOLUÇÃO: Indique um tipo de conexão de banco de dados desejado (db:) ou uma pasta para arquivos .csv (csvs:) em "/config/config.json".');
       // print.info('conecsync config (exibe arquivo de configuração.');
       print.divider();
       toolbox.configuracao();
       print.divider();
       return;
     } // if
+    
+    if (!!CONFIG_DB && !SUPPORTED_ALL.includes(CONFIG_DB)) {
+      print.table([...LOGS], { format: 'lean' });
+      print.divider();
+      print.error(`ERRO: Conexão "${CONFIG_DB}" é inválida ou não suportada.`);
+      print.success('SOLUÇÃO: Indique um tipo VÁLIDO de conexão de banco de dados (db:) em "/config/config.json".');
+      // print.info('conecsync config (exibe arquivo de configuração.');
+      print.divider();
+      toolbox.configuracao();
+      print.divider();
+      return;
+    } // else
 
     ORIGENS.estoque = origemOk(estoqueJson, configJson);
     ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson);

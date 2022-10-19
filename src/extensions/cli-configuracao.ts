@@ -48,24 +48,24 @@ module.exports = (toolbox: GluegunToolbox) => {
       ]
     );
     print.highlight(
-      '  TRUE: Modo desenvolvimento ou sandbox, apenas para testes de integração, sincronizam em lojas que não funcionam realmente.'
+      '  TRUE: Modo desenvolvimento ou sandbox, apenas para testes de integração, sincronizam em lojas que não atendem de fato os pedidos.'
     );print.highlight(
       '  FALSE: Modo produção, sincroniza com lojas reais da plataforma.'
     );
-    print.warning('- Essa selecão deve corresponder aos tipos de tokens de loja indicados (desenvolvimento/produção) em "/config/destinos/*.json" ou todas chamadas à api serão recusadas.')
+    print.warning('- Essa selecão deve corresponder aos tipos de tokens de loja indicados (desenvolvimento/produção) em "/config/destinos/*.json" ou suas chamadas à api serão recusadas.')
     print.divider();
 
-    print.table(
-      [
-        ['usaDepartamentosBase (obrigatório)', 'Aplicada apenas à origem "produtos".']
-      ]
-    );
-    print.highlight(
-      '  TRUE: usa departamentos/subdepartamentos da base de dados.'
-    );print.highlight(
-      '  FALSE: usa departamentos/subdepartamendos do cadastro da loja.'
-    );
-    print.warning('- Disponível apenas em modo desenvolvimento, em modo produção será sempre buscada a configuração indicada na loja.');
-    print.warning('- Apenas produtos industrializados (com barcode) podem ter seus departamentos/subdepartamentos buscados na base de dados, para produtos sem barcode, os da própria loja sempre serão utilizados.')
+    // print.table(
+    //   [
+    //     ['usaDepartamentosBase (obrigatório)', 'Aplicada apenas à origem "produtos".']
+    //   ]
+    // );
+    // print.highlight(
+    //   '  TRUE: usa departamentos/subdepartamentos da base de dados.'
+    // );print.highlight(
+    //   '  FALSE: usa departamentos/subdepartamendos do cadastro da loja.'
+    // );
+    // print.warning('- Disponível apenas em modo desenvolvimento, em modo produção será sempre buscada a configuração indicada na loja.');
+    // print.warning('- Apenas produtos industrializados (com barcode) podem ter seus departamentos/subdepartamentos buscados na base de dados, para produtos sem barcode, os da própria loja sempre serão utilizados.')
   }
 }

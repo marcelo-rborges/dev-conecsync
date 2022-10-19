@@ -1,7 +1,6 @@
 {
-  "db": "mysql",
+  "db": "firebird",
   "csvs": "",
   "sandbox": true,
-  "usaDepartamentosBase": false,
   "qtdeAutoDestaque": 10
 }
