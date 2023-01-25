@@ -151,6 +151,7 @@ module.exports = (toolbox: GluegunToolbox) => {
               throw err;
             } // if
             if (db) {
+              /*
               const SQL_BARCODES: string = `
                 SELECT
                   *
@@ -184,6 +185,22 @@ module.exports = (toolbox: GluegunToolbox) => {
                   db,
                   SQL_NBARCODES
                 );
+              */
+
+              const SQL: string = `
+                SELECT
+                  *
+                FROM
+                  ${produtosJson?.nomeView}
+                WHERE
+                  id_loja = ${LOJA.id}
+              `;
+              !!DEBUG && print.debug(`SQL:${SQL}`);
+              const PRODUTOS: any[] =
+                await dbQuery(
+                  db,
+                  SQL
+                );
 
               db.detach();
 
@@ -193,10 +210,10 @@ module.exports = (toolbox: GluegunToolbox) => {
                   projeto: PROJETO,
                   loja: LOJA,
                   apiUrl: API_URL,
-                  produtos: {
-                    barcodes: PRODUTOS_BARCODES,
-                    nbarcodes: PRODUTOS_NBARCODES
-                  }
+                  produtos: PRODUTOS // {
+                  // barcodes: PRODUTOS_BARCODES,
+                  // nbarcodes: PRODUTOS_NBARCODES
+                  // }
                 }
               );
             } // if

@@ -1,6 +1,7 @@
 //#region gluegun
 import { GluegunToolbox } from 'gluegun';
 const { http } = require('gluegun');
+const os = require('os');
 //#endregion
 
 //#region 3rd
@@ -53,10 +54,30 @@ module.exports = (toolbox: GluegunToolbox) => {
       id: LOJA_ID,
       token: LOJA_TOKEN
     } = LOJA;
+    const TOTAL: {
+      changed: number,
+      unchanged: number
+    } = {
+      changed: 0,
+      unchanged: 0
+    };
 
     // JSONdb
-    const DIR: string = `./hashes/${PROJETO}/lojas/${LOJA_ID}`;
-    if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });
+    const DIR: string = `${os.tmpdir()}/hashes/${PROJETO}/lojas/${LOJA_ID}`;
+    // console.log('DIR: ', DIR, fs.existsSync(DIR));
+    // try {
+    if (!fs.existsSync(DIR)) { fs.mkdirSync(DIR, { recursive: true }); }
+    //   fs.access(
+    //     DIR,
+    //     (error) => {
+    //       console.log(error);
+    //       !!error && fs.mkdirSync(DIR, { recursive: true });
+    //     }
+    //   );
+    // } catch (error) {
+    //   !!error && console.log(get(error, 'message') || '');
+    // } // try-catch
+
     const DB_PRODUTOS = new JSONdb(
       `${DIR}/produtos.db`,
       { asyncWrite: false }
@@ -76,15 +97,16 @@ module.exports = (toolbox: GluegunToolbox) => {
     // const HAS_PRODUTOS: boolean = OK ? !!get(DATA, 'some') : false;
     // print.debug(`HAS_PRODUTOS:${HAS_PRODUTOS}`);
 
-    const PRODUTOS_BARCODES: any[] = get(props, 'produtos.barcodes') || [];
-    const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
-    const PRODUTOS_ALL: any[] = PRODUTOS_BARCODES.concat(PRODUTOS_NBARCODES);
+    // const PRODUTOS_BARCODES: any[] = get(props, 'produtos.barcodes') || [];
+    // const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
+    // const PRODUTOS_ALL: any[] = PRODUTOS_BARCODES.concat(PRODUTOS_NBARCODES);
+    const PRODUTOS_ALL: any[] = get(props, 'produtos') || [];
 
     print.table(
       [
         ['Produto(s) encontrado(s)', String(PRODUTOS_ALL.length)],
-        ['Produto(s) com barcodes(s)', String(PRODUTOS_BARCODES.length)],
-        ['Produto(s) sem barcodes(s)', String(PRODUTOS_NBARCODES.length)],
+        // ['Produto(s) com barcodes(s)', String(PRODUTOS_BARCODES.length)],
+        // ['Produto(s) sem barcodes(s)', String(PRODUTOS_NBARCODES.length)],
         // ['Departamento(s) encontrado(s)', String(DEPTOS_ALL.length)],
         // ['Subdepartamento(s) encontrado(s)', String(SUBS_ALL.length)],
       ],
@@ -157,10 +179,12 @@ module.exports = (toolbox: GluegunToolbox) => {
         const HASH_PROD: string = HASH(PROD_BODY) || '';
         const DB_HASH_PROD = get(DB_PRODUTOS.get(PROD_ID), 'hash') || '';
         // print.highlight(`DRY-RUN:${!!DRY_RUN}, #${PROD_ID}, HASH_PROD:${HASH_PROD}, DB_HASH_PROD:${DB_HASH_PROD}`);
-        process.stdout.write(HASH_PROD === DB_HASH_PROD ? '=' : '!');
+        const HASH_CHANGED: boolean = HASH_PROD !== DB_HASH_PROD;
+        TOTAL[HASH_CHANGED ? 'changed' : 'unchanged'] += 1;
+        process.stdout.write(HASH_CHANGED ? '!' : '=');
         if (!DRY_RUN) {
           try {
-            if (HASH_PROD !== DB_HASH_PROD) {
+            if (HASH_CHANGED) {
               DB_PRODUTOS.set(
                 PROD_ID,
                 { hash: HASH_PROD }
@@ -187,6 +211,17 @@ module.exports = (toolbox: GluegunToolbox) => {
         } // else
       } // if
     } // for
+    
+    // process.stdout.write(JSON.stringify(TOTAL));
+    process.stdout.write('\n');
+    print.divider();
+    print.table(
+      [
+        ['Produto(s) modificado(s)', String(TOTAL.changed)],
+        ['Produto(s) NÃO modificado(s)', String(TOTAL.unchanged)],
+      ],
+      { format: 'lean' }
+    );
 
     /*
     function hasSub(

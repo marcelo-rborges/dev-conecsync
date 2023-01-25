@@ -1,5 +1,6 @@
 //#region gluegun
 import { GluegunToolbox } from 'gluegun';
+const os = require('os');
 //#endregion
 
 //#region 3rd
@@ -82,20 +83,26 @@ module.exports = (toolbox: GluegunToolbox) => {
       csvs: CONFIG_CSVS,
       sandbox: CONFIG_SANDBOX,
       // usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
-      qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
+      // qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
-    LOGS.push(['Conexão DB', CONFIG_DB || '-']);
-    LOGS.push(['Pastas CSVS', CONFIG_CSVS || '-']);
+    LOGS.push(['Conexão DB em uso', CONFIG_DB || '-']);
+    LOGS.push(['Pasta CSVS', CONFIG_CSVS || '-']);
     // LOGS.push(
     //   [
     //     'Usa departamentos base',
     //     !!CONFIG_USA_DEPARTAMENTOS_BASE ? 'HABILITADO' : 'desabilitado'
     //   ]
     // );
+    // LOGS.push(
+    //   [
+    //     'Qtde auto destaque', Number(QTDE_AUTO_DESTAQUE) || 0
+    //   ]
+    // );
     LOGS.push(
       [
-        'Qtde auto destaque', Number(QTDE_AUTO_DESTAQUE) || 0
+        'Pasta temporária',
+        os.tmpdir()
       ]
     );
     LOGS.push(
@@ -116,7 +123,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.divider();
       return;
     } // if
-    
+
     if (!!CONFIG_DB && !SUPPORTED_ALL.includes(CONFIG_DB)) {
       print.table([...LOGS], { format: 'lean' });
       print.divider();

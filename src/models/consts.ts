@@ -14,7 +14,7 @@ export const SUPPORTED_ALL = [...SUPPORTED_SQLS, ...SUPPORTED_NOSQLS];
 //#endregion
 
 //#region misc
-export const DEBUG: boolean = true;
+export const DEBUG: boolean = false;
 //#endregion
 
 // CSVs

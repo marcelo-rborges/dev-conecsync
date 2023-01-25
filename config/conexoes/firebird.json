@@ -1,7 +1,7 @@
 {
   "host": "127.0.0.1",
   "port": 3050,
-  "database": "D:\\dbs\\fb\\supermercado-mineiro\\TGA.fdb",
+  "database": "D:\\dbs\\fb\\tele-radio\\TGA.fdb",
   "user": "SYSDBA",
   "password": "masterkey",
   "lowercase_keys": false,
