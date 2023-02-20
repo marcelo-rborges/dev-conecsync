@@ -64,15 +64,28 @@ module.exports = (toolbox: GluegunToolbox) => {
       || parameters.options.dryRun
     );
     // print.info(DRY_RUN);
+    
+    const DIAG: boolean = !!(
+      (props || '').toLowerCase().trim().replace(/-/g, '') === 'diag'
+      || parameters.options.diag
+    );
 
     // node version
     const nodeVersion = await toolbox.system.run('node -v', { trim: true });
     LOGS.push(['Node js', nodeVersion]);
 
+    // diag?
+    LOGS.push(
+      [
+        'Modo diagnóstico (diag)',
+        !!DIAG ? 'HABILITADO' : 'desabilitado'
+      ]
+    );
+
     // dry run?
     LOGS.push(
       [
-        'Modo diagnóstico (dry run)',
+        'Modo simulação (test)',
         !!DRY_RUN ? 'HABILITADO' : 'desabilitado'
       ]
     );
@@ -185,7 +198,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     print.table([...LOGS], { format: 'lean' });
     // Mercadeiro
-    if (MERCADEIRO_LOJAS.length) {
+    if (!!MERCADEIRO_LOJAS.length && !DIAG) {
       toolbox.runProjeto(
         {
           dryRun: DRY_RUN,

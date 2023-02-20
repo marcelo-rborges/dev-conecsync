@@ -55,6 +55,12 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.warning('- Essa selecão deve corresponder aos tipos de tokens de loja indicados (desenvolvimento/produção) em "/config/destinos/*.json" ou suas chamadas à api serão recusadas.')
     print.divider();
 
+    print.table(
+      [
+        ['forceDefaultOnline (opcional)', 'Força flag online true/false para TODOS produtos.']
+      ]
+    );
+
     // print.table(
     //   [
     //     ['usaDepartamentosBase (obrigatório)', 'Aplicada apenas à origem "produtos".']

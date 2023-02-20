@@ -22,7 +22,7 @@ import {
 //#endregion
 
 //#region models
-// const configJson = require('../../config/config.json');
+const configJson = require('../../config/config.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -165,6 +165,12 @@ module.exports = (toolbox: GluegunToolbox) => {
           // "tipoUnidadeFracao": FRACIONADO_TIPO,
           // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
         };
+
+        const FORCE_DEFAULT_ONLINE: any = get(configJson, 'forceDefaultOnline');
+        if (typeof FORCE_DEFAULT_ONLINE === 'boolean') {
+          PROD_BODY.online = !!FORCE_DEFAULT_ONLINE;
+        } // if
+
         // print.debug(`${PROD_ID}:${JSON.stringify(PROD_BODY)}`);
 
         // if (!HAS_PRODUTOS) {
@@ -211,7 +217,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         } // else
       } // if
     } // for
-    
+
     // process.stdout.write(JSON.stringify(TOTAL));
     process.stdout.write('\n');
     print.divider();
