@@ -165,6 +165,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           // },
           "ncm": get(PRODUTO, 'ncmProduto') || '',
           "nome": get(PRODUTO, 'nomeProduto') || '',
+          "online": false,
           "preco": {
             desc: 0,
             produto: Number(get(PRODUTO, 'precoVenda') || 0),
