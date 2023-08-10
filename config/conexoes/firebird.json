@@ -1,15 +1,3 @@
-<<<<<<< Updated upstream
-{
-  "host": "127.0.0.1",
-  "port": 3050,
-  "database": "D:\\dbs\\fb\\tele-radio\\TGA.fdb",
-  "user": "SYSDBA",
-  "password": "masterkey",
-  "lowercase_keys": false,
-  "role": null,
-  "pageSize": 4096
-}
-=======
 {
   "host": "127.0.0.1",
   "port": 3050,
@@ -20,4 +8,3 @@
   "role": null,
   "pageSize": 4096
 }
->>>>>>> Stashed changes

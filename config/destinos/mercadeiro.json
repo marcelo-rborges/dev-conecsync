@@ -1,12 +1,3 @@
-<<<<<<< Updated upstream
-{
-  "lojas": [
-    {
-      "id": "1",
-      "token": "ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnNiMnBoU1dRaU9pSTVNRGM0TURnME9DMHRiRzlxWVMxdGIyUmxiRzh0TFcxbkxTMTFZbVZ5WVdKaElpd2lhR0Z6YUNJNkltUTJOR0k0TlRVM0lpd2lhV0YwSWpveE5qYzJNVEl4TVRZMmZRLjdyQlluOUlpdW0xQ056d29wUFZicTlGYlEySkR0UjV6UWFmOXFYVmo5QkU="
-    }
-  ]
-=======
 {
   "lojas": [
     {
@@ -14,5 +5,4 @@
       "token": "ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnNiMnBoU1dRaU9pSmxNR1l3WXpBNFlpMHRiVzlrWld4dkxTMXRaeTB0ZFdKbGNtRmlZU0lzSW1oaGMyZ2lPaUl4T1dGa1pEUTJZeUlzSW1saGRDSTZNVFk1TURNMk56TTNObjAuUGNabkZuamtzRXc3bXR0dlpXVFU1R0ZzQjRyVkk2MnFWTFZINGRqVnJuOA=="
     }
   ]
->>>>>>> Stashed changes
 }
