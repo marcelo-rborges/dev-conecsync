@@ -135,7 +135,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           "atacado": {
             "status": !!chkBool(get(PRODUTO, 'atacadoStatus')),
             "qtde": Number(get(PRODUTO, 'atacadoQtde') || 0),
-            "valor": Number(get(PRODUTO, 'atacadoPreco') || 0),
+            "preco": Number(get(PRODUTO, 'atacadoPreco') || 0),
           },
           "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
           "barcode": get(PRODUTO, 'barcodeProduto') || '',
@@ -149,8 +149,12 @@ module.exports = (toolbox: GluegunToolbox) => {
             "id": SUB_ID,
             "nome": get(PRODUTO, 'nomeSubdepartamento') || '',
           },
-          // "destaque": !!(Math.random() < 0.5),
-          "estoqueCritico": false, // chkBool(get(PRODUTO, 'ativo')),
+          /* "departamento3": {
+            // "ativo": !!chkBool(get(PRODUTO, 'ativoSubdepartamento', true)),
+            "id": SUB_ID2,
+            "nome": get(PRODUTO, 'nomeSubdepartamento2') || '',
+          }, */
+          "estoqueCritico": false,
           "fracao": {
             tipo: FRACIONADO_TIPO,
             valor: get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || 0,
@@ -161,7 +165,10 @@ module.exports = (toolbox: GluegunToolbox) => {
           // },
           "ncm": get(PRODUTO, 'ncmProduto') || '',
           "nome": get(PRODUTO, 'nomeProduto') || '',
-          "preco": Number(get(PRODUTO, 'precoVenda') || 0),
+          "preco": {
+            desc: 0,
+            produto: Number(get(PRODUTO, 'precoVenda') || 0),
+          },          
           // "tipoUnidadeFracao": FRACIONADO_TIPO,
           // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
         };

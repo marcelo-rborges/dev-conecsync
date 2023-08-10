@@ -50,7 +50,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
               // PERCENTUAL_LIMITE_VENDA, QTDE_LIMITE_VENDA, FRACIONADO_STATUS, FRACIONADO_FRACAO, FRACIONADO_PERC_DESC_PROMO_AUTO, DESCRICAO_PRODUTO, DESTAQUE
 
-              if (result) {
+              if (!!result) {
                 const RESULTADO = (result || []).map(
                   (row: any) => {
                     return {
