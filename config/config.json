@@ -1,6 +1,6 @@
 {
-  "db": "firebird",
-  "csvs": "",
+  "db": "",
+  "csvs": "\/home\/conecdata\/csvs",
   "sandbox": true,
-  "forceDefaultOnline": false
+  "forceDefaultOnline": true
 }

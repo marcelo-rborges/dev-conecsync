@@ -125,7 +125,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.divider();
       toolbox.conexoes();
       return;
-    }
+    } // if
 
     //   Firebird.attach(options, function(err, db) {
 
@@ -141,7 +141,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // });
 
     try {
-      if (FIREBIRD) {
+      if (!!FIREBIRD) {
         FIREBIRD.attach(
           firebirdJson,
           async (err, db) => {
@@ -218,8 +218,8 @@ module.exports = (toolbox: GluegunToolbox) => {
               );
             } // if
           }
-        )
-      }
+        );
+      } // if
     } catch (error) {
       print.error(get(error, 'message'));
     }

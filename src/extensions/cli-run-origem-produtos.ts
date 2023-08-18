@@ -25,12 +25,21 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // print.success(JSON.stringify(props));
 
-    const { db: TIPO_CONEXAO } = configJson;
-
-    // print.highlight(TIPO_CONEXAO)
-
+    // const { db: TIPO_CONEXAO } = configJson;
+    // print.info('configJson: ' + JSON.stringify(configJson));
+    const TIPO_CONEXAO: string = configJson?.db || (!!configJson?.csvs ? 'csv' : '');
+    // print.info('TIPO_CONEXAO: ' + TIPO_CONEXAO);
     switch (TIPO_CONEXAO) {
       case 'csv':
+        toolbox.runOrigemProdutosCsv(
+          {
+            dryRun: DRY_RUN,
+            projeto: PROJETO,
+            apiUrl: API_URL,
+            loja: LOJA,
+            conexao: TIPO_CONEXAO
+          }
+        );
         break;
 
       // case 'mongodb':

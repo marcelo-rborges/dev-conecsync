@@ -35,7 +35,6 @@ module.exports = (toolbox: GluegunToolbox) => {
     } = props;
 
     try {
-
       const fs = require('fs');
       // const csv = require('csv-parser');
       const SEARCH_REG_EXP = /"/g;

@@ -1,5 +1,5 @@
 {
-  "nomeView": "VIEW_CONECDATA_PRODUTOS",
-  "arquivoCsv": "",
+  "nomeView": "",
+  "arquivoCsv": "uniao_100.csv",
   "schemaNoSql": false
 }

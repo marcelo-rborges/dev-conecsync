@@ -4,7 +4,7 @@ import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'conecsync',
-  description: 'help + diag.',
+  description: 'help + info.',
   run: async (toolbox) => {
     const { print } = toolbox;
 
@@ -12,7 +12,7 @@ const command: GluegunCommand = {
     print.printHelp(toolbox);
     print.newline();
 
-    toolbox.run('--diag');
+    toolbox.run('--info');
   },
 }
 

@@ -13,6 +13,7 @@ const command: GluegunCommand = {
 
     print.success(`\n${meta.packageJSON().name} v${meta.version()} > Test`);
     print.divider();
+    
     toolbox.run('--dry-run');
   },
 }

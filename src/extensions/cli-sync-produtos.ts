@@ -134,8 +134,8 @@ module.exports = (toolbox: GluegunToolbox) => {
         const PROD_BODY: any = {
           "atacado": {
             "status": !!chkBool(get(PRODUTO, 'atacadoStatus')),
-            "qtde": Number(get(PRODUTO, 'atacadoQtde') || 0),
-            "preco": Number(get(PRODUTO, 'atacadoPreco') || 0),
+            "qtde": Number((get(PRODUTO, 'atacadoQtde') || '').replace(/,/g, '.')) || 0,
+            "preco": Number((get(PRODUTO, 'atacadoPreco') || '').replace(/,/g, '.')) || 0,
           },
           "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
           "barcode": get(PRODUTO, 'barcodeProduto') || '',
@@ -157,7 +157,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           "estoqueCritico": false,
           "fracao": {
             tipo: FRACIONADO_TIPO,
-            valor: get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || 0,
+            valor: Number(get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '') || 0,
           },
           // "limiteVenda": {
           //   "max": Number(get(PRODUTO, 'preco') || 0),
@@ -165,11 +165,10 @@ module.exports = (toolbox: GluegunToolbox) => {
           // },
           "ncm": get(PRODUTO, 'ncmProduto') || '',
           "nome": get(PRODUTO, 'nomeProduto') || '',
-          "online": false,
           "preco": {
             desc: 0,
-            produto: Number(get(PRODUTO, 'precoVenda') || 0),
-          },          
+            produto: Number((get(PRODUTO, 'precoVenda') || '').replace(/,/g, '.')) || 0,
+          },
           // "tipoUnidadeFracao": FRACIONADO_TIPO,
           // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
         };

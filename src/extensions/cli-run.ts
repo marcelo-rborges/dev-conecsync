@@ -18,11 +18,11 @@ const mercadeiro = require('../../config/destinos/mercadeiro.json');
 // const sequelizeConn = require('../libs/sequelize-conn');
 // import { TConexaoDb } from '../models/types';
 const configJson = require('../../config/config.json');
-const estoqueJson = require('../../config/origens/estoque.json');
-const formasPgtoJson = require('../../config/origens/formas-pgto.json');
-const produtosPromocoesJson = require('../../config/origens/produtos-promocoes.json');
+// const estoqueJson = require('../../config/origens/estoque.json');
+// const formasPgtoJson = require('../../config/origens/formas-pgto.json');
+// const produtosPromocoesJson = require('../../config/origens/produtos-promocoes.json');
 const produtosJson = require('../../config/origens/produtos.json');
-const promocoesJson = require('../../config/origens/promocoes.json');
+// const promocoesJson = require('../../config/origens/promocoes.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -63,27 +63,28 @@ module.exports = (toolbox: GluegunToolbox) => {
       (props || '').toLowerCase().trim().replace(/-/g, '') === 'dryrun'
       || parameters.options.dryRun
     );
-    // print.info(DRY_RUN);
-    
-    const DIAG: boolean = !!(
-      (props || '').toLowerCase().trim().replace(/-/g, '') === 'diag'
-      || parameters.options.diag
+    // print.info('DRY_RUN: ' + DRY_RUN);
+
+    const INFO: boolean = !!(
+      (props || '').toLowerCase().trim().replace(/-/g, '') === 'info'
+      || parameters.options.info
     );
+    // print.info('INFO: ' + INFO);
 
     // node version
     const nodeVersion = await toolbox.system.run('node -v', { trim: true });
     LOGS.push(['Node js', nodeVersion]);
 
-    // diag?
+    // info?
     LOGS.push(
       [
-        'Modo diagnóstico (diag)',
-        !!DIAG ? 'HABILITADO' : 'desabilitado'
+        'Modo informativo',
+        !!INFO ? 'HABILITADO' : 'desabilitado'
       ]
     );
 
     // dry run?
-    LOGS.push(
+    !INFO && LOGS.push(
       [
         'Modo simulação (test)',
         !!DRY_RUN ? 'HABILITADO' : 'desabilitado'
@@ -125,6 +126,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       ]
     );
 
+    // print.info('CONFIG_DB: ' + CONFIG_DB);
+    // print.info('CONFIG_CSVS: ' + CONFIG_CSVS);
     if (!CONFIG_DB && !CONFIG_CSVS) {
       print.table([...LOGS], { format: 'lean' });
       print.divider();
@@ -149,11 +152,11 @@ module.exports = (toolbox: GluegunToolbox) => {
       return;
     } // else
 
-    ORIGENS.estoque = origemOk(estoqueJson, configJson);
-    ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson);
-    ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson, configJson);
+    // ORIGENS.estoque = origemOk(estoqueJson, configJson);
+    // ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson);
+    // ORIGENS.produtosPromocoes = origemOk(produtosPromocoesJson, configJson);
     ORIGENS.produtos = origemOk(produtosJson, configJson);
-    ORIGENS.promocoes = origemOk(promocoesJson, configJson);
+    // ORIGENS.promocoes = origemOk(promocoesJson, configJson);
 
     // print.highlight(ORIGENS.estoque = origemOk(estoqueJson, configJson));
     // print.highlight(ORIGENS.formasPgto = origemOk(formasPgtoJson, configJson));
@@ -161,14 +164,14 @@ module.exports = (toolbox: GluegunToolbox) => {
     // print.highlight(ORIGENS.produtos = origemOk(produtosJson, configJson));
     // print.highlight(ORIGENS.promocoes = origemOk(promocoesJson, configJson));
 
-    // print.warning(JSON.stringify(ORIGENS));
+    // print.warning('ORIGENS: ' + JSON.stringify(ORIGENS));
 
     if (
-      !ORIGENS.estoque
-      && !ORIGENS.formasPgto
-      && !ORIGENS.produtosPromocoes
-      && !ORIGENS.produtos
-      && !ORIGENS.promocoes
+      !ORIGENS.produtos
+      // && !ORIGENS.estoque
+      // && !ORIGENS.formasPgto
+      // && !ORIGENS.produtosPromocoes
+      // && !ORIGENS.promocoes
     ) {
       print.table([...LOGS], { format: 'lean' });
       print.divider();
@@ -198,7 +201,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     print.table([...LOGS], { format: 'lean' });
     // Mercadeiro
-    if (!!MERCADEIRO_LOJAS.length && !DIAG) {
+    if (!!MERCADEIRO_LOJAS.length && !INFO) {
       toolbox.runProjeto(
         {
           dryRun: DRY_RUN,
