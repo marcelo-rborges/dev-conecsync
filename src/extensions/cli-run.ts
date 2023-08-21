@@ -27,7 +27,6 @@ const produtosJson = require('../../config/origens/produtos.json');
 
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.run = async (props: string) => {
-    // toolbox.print.info('called foo extension');
     const {
       parameters,
       print
@@ -76,55 +75,22 @@ module.exports = (toolbox: GluegunToolbox) => {
     LOGS.push(['Node js', nodeVersion]);
 
     // info?
-    LOGS.push(
-      [
-        'Modo informativo',
-        !!INFO ? 'HABILITADO' : 'desabilitado'
-      ]
-    );
+    LOGS.push(['Modo informativo', !!INFO ? 'HABILITADO' : 'desabilitado']);
 
     // dry run?
-    !INFO && LOGS.push(
-      [
-        'Modo simulação (test)',
-        !!DRY_RUN ? 'HABILITADO' : 'desabilitado'
-      ]
-    );
+    !INFO && LOGS.push(['Modo simulação (test)', !!DRY_RUN ? 'HABILITADO' : 'desabilitado']);
 
     // "/config/config.json"
     const {
       db: CONFIG_DB,
       csvs: CONFIG_CSVS,
       sandbox: CONFIG_SANDBOX,
-      // usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
-      // qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
     LOGS.push(['Conexão DB em uso', CONFIG_DB || '-']);
     LOGS.push(['Pasta CSVS', CONFIG_CSVS || '-']);
-    // LOGS.push(
-    //   [
-    //     'Usa departamentos base',
-    //     !!CONFIG_USA_DEPARTAMENTOS_BASE ? 'HABILITADO' : 'desabilitado'
-    //   ]
-    // );
-    // LOGS.push(
-    //   [
-    //     'Qtde auto destaque', Number(QTDE_AUTO_DESTAQUE) || 0
-    //   ]
-    // );
-    LOGS.push(
-      [
-        'Pasta temporária',
-        os.tmpdir()
-      ]
-    );
-    LOGS.push(
-      [
-        'Modo sandbox',
-        !!CONFIG_SANDBOX ? 'habilitado' : 'DESABILITADO'
-      ]
-    );
+    LOGS.push(['Pasta temporária', os.tmpdir()]);
+    LOGS.push(['Modo sandbox', !!CONFIG_SANDBOX ? 'habilitado' : 'DESABILITADO']);
 
     // print.info('CONFIG_DB: ' + CONFIG_DB);
     // print.info('CONFIG_CSVS: ' + CONFIG_CSVS);

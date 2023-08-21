@@ -5,6 +5,7 @@ const os = require('os');
 //#endregion
 
 //#region 3rd
+// import axios/* , { AxiosResponse } */ from 'axios';
 const fs = require('fs');
 import {
   get,
@@ -15,10 +16,7 @@ const JSONdb = require('simple-json-db');
 //#endregion 
 
 //#region libs
-import {
-  chkBool,
-  //   buscaDeptosSubs
-} from '../libs';
+import { chkBool } from '../libs';
 //#endregion
 
 //#region models
@@ -78,20 +76,15 @@ module.exports = (toolbox: GluegunToolbox) => {
     //   !!error && console.log(get(error, 'message') || '');
     // } // try-catch
 
-    const DB_PRODUTOS = new JSONdb(
-      `${DIR}/produtos.db`,
-      { asyncWrite: false }
-    );
+    const DB_PRODUTOS = new JSONdb(`${DIR}/produtos.db`, { asyncWrite: false });
 
     // print.warning(props);
-    const API = http.create({
-      baseURL: API_URL,
-      headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` },
-    });
-    // const {
-    //   qtdeAutoDestaque: QTDE_AUTO_DESTAQUE
-    // } = configJson;
-    // print.debug(QTDE_AUTO_DESTAQUE);
+    const API = http.create({ baseURL: API_URL, headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` } });
+    // const API = axios.create({
+    //   baseURL: API_URL,
+    //   timeout: 1000,
+    //   headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` }
+    // });
 
     // const { ok: OK, data: DATA } = await API.get('/produtos/flags/some');
     // const HAS_PRODUTOS: boolean = OK ? !!get(DATA, 'some') : false;
@@ -101,6 +94,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
     // const PRODUTOS_ALL: any[] = PRODUTOS_BARCODES.concat(PRODUTOS_NBARCODES);
     const PRODUTOS_ALL: any[] = get(props, 'produtos') || [];
+    // print.debug(PRODUTOS_ALL);
 
     print.table(
       [
@@ -121,8 +115,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       // TODO: Calcular estoqueCritico usando qtde_estoque_minimo <-> qtde_estoque_atual
       const PROD_ID: string = String(get(PRODUTO, 'idProduto') || '');
       // print.debug(`PROD_ID:${PROD_ID}`);
-      const DEPTO_ID: string = String(get(PRODUTO, 'idDepartamento') || '');
-      const SUB_ID: string = String(get(PRODUTO, 'idSubdepartamento') || '');
+      const DEPTO1_ID: string = String(get(PRODUTO, 'idDepartamento1') || '');
+      const DEPTO2_ID: string = String(get(PRODUTO, 'idDepartamento2') || '');
+      const DEPTO3_ID: string = String(get(PRODUTO, 'idDepartamento3') || '');
       const FRACIONADO_TIPO: string = (get(PRODUTO, 'fracionadoTipo') || '').toUpperCase();
 
       // idLoja: fixBuffStr(get(row, 'ID_LOJA')) || '',
@@ -130,7 +125,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       // qtdeEstoqueMinimo: fixBuffStr(get(row, 'QTDE_ESTOQUE_MINIMO')) || '',
       // qtdeEstoqueAtual: fixBuffStr(get(row, 'QTDE_ESTOQUE_ATUAL')) || '',
 
-      if (PROD_ID) {
+      if (!!PROD_ID) {
         const PROD_BODY: any = {
           "atacado": {
             "status": !!chkBool(get(PRODUTO, 'atacadoStatus')),
@@ -140,20 +135,22 @@ module.exports = (toolbox: GluegunToolbox) => {
           "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
           "barcode": get(PRODUTO, 'barcodeProduto') || '',
           "departamento1": {
-            // "ativo": !!chkBool(get(PRODUTO, 'ativoDepartamento')),
-            "id": DEPTO_ID,
-            "nome": get(PRODUTO, 'nomeDepartamento') || '',
+            "id": DEPTO1_ID,
+            "nome": get(PRODUTO, 'nomeDepartamento1') || '',
           },
           "departamento2": {
-            // "ativo": !!chkBool(get(PRODUTO, 'ativoSubdepartamento', true)),
-            "id": SUB_ID,
-            "nome": get(PRODUTO, 'nomeSubdepartamento') || '',
+            "id": DEPTO2_ID,
+            "nome": get(PRODUTO, 'nomeDepartamento2') || '',
           },
-          /* "departamento3": {
-            // "ativo": !!chkBool(get(PRODUTO, 'ativoSubdepartamento', true)),
-            "id": SUB_ID2,
-            "nome": get(PRODUTO, 'nomeSubdepartamento2') || '',
-          }, */
+          "departamento3": {
+            "id": DEPTO3_ID,
+            "nome": get(PRODUTO, 'nomeDepartamento3') || '',
+          },
+          // "departamento3": {
+          //   // "ativo": !!chkBool(get(PRODUTO, 'ativoSubdepartamento', true)),
+          //   "id": SUB_ID2,
+          //   "nome": get(PRODUTO, 'nomeSubdepartamento2') || '',
+          // },
           "estoqueCritico": false,
           "fracao": {
             tipo: FRACIONADO_TIPO,
@@ -174,9 +171,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         };
 
         const FORCE_DEFAULT_ONLINE: any = get(configJson, 'forceDefaultOnline');
-        if (typeof FORCE_DEFAULT_ONLINE === 'boolean') {
-          PROD_BODY.online = !!FORCE_DEFAULT_ONLINE;
-        } // if
+        if (typeof FORCE_DEFAULT_ONLINE === 'boolean') { PROD_BODY.online = !!FORCE_DEFAULT_ONLINE; } // if
 
         // print.debug(`${PROD_ID}:${JSON.stringify(PROD_BODY)}`);
 
@@ -194,25 +189,30 @@ module.exports = (toolbox: GluegunToolbox) => {
         // print.highlight(`DRY-RUN:${!!DRY_RUN}, #${PROD_ID}, HASH_PROD:${HASH_PROD}, DB_HASH_PROD:${DB_HASH_PROD}`);
         const HASH_CHANGED: boolean = HASH_PROD !== DB_HASH_PROD;
         TOTAL[HASH_CHANGED ? 'changed' : 'unchanged'] += 1;
-        process.stdout.write(HASH_CHANGED ? '!' : '=');
+        process.stdout.write(HASH_CHANGED ? '*' : '.');
         if (!DRY_RUN) {
           try {
-            if (HASH_CHANGED) {
-              DB_PRODUTOS.set(
-                PROD_ID,
-                { hash: HASH_PROD }
-              );
-              API.post(
+            if (!!HASH_CHANGED) {
+              DB_PRODUTOS.set(PROD_ID, { hash: HASH_PROD });
+              // await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              /* API.post(
                 `/produtos/${PROD_ID}`,
                 PROD_BODY
               )
                 .then(() => {
                   print.success(`\n#${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
                   print.divider();
-                });
+                }); */
+              // gluegun.http
+              await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              // axios
+              // const RET: AxiosResponse = 
+              // await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              print.success(`\n#${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
+              print.divider();
             } // if
           } catch (err) {
-            print.warning(err);
+            !!err && print.warning(err);
           } // try-catch
         } else {
           // print.highlight(`DRY-RUN: ${JSON.stringify(SUB_BODY)}`);

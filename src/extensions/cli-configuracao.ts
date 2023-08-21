@@ -60,18 +60,5 @@ module.exports = (toolbox: GluegunToolbox) => {
         ['forceDefaultOnline (opcional)', 'Força flag online true/false para TODOS produtos.']
       ]
     );
-
-    // print.table(
-    //   [
-    //     ['usaDepartamentosBase (obrigatório)', 'Aplicada apenas à origem "produtos".']
-    //   ]
-    // );
-    // print.highlight(
-    //   '  TRUE: usa departamentos/subdepartamentos da base de dados.'
-    // );print.highlight(
-    //   '  FALSE: usa departamentos/subdepartamendos do cadastro da loja.'
-    // );
-    // print.warning('- Disponível apenas em modo desenvolvimento, em modo produção será sempre buscada a configuração indicada na loja.');
-    // print.warning('- Apenas produtos industrializados (com barcode) podem ter seus departamentos/subdepartamentos buscados na base de dados, para produtos sem barcode, os da própria loja sempre serão utilizados.')
   }
 }

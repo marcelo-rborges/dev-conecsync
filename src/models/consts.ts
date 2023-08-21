@@ -73,7 +73,7 @@ export const DEBUG: boolean = false;
 // Apis
 export const API_URLS = {
   mercadeiro: {
-    sandbox: 'https://api.sandbox.mercadeiro.com.br', // 'https://api.sandbox.mercadeiro.com.br/v1'
+    sandbox: 'https://api.sandbox.mercadeiro.com.br', // 'https://api.sandbox.mercadeiro.com.br/v1' // 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1'
     producao: 'https://us-central1-mercadeiro--prod.cloudfunctions.net/v1', // 'https://api.mercadeiro.com.br/v1'
   }
 };
@@ -149,29 +149,41 @@ export const CAMPOS_PRODUTOS: any = {
     type: DataTypes.DECIMAL,
     field: 'PRECO_VENDA'
   },
-  departamento_id: {
+  departamento1_id: {
     type: DataTypes.INTEGER,
-    field: 'ID_DEPARTAMENTO'
+    field: 'ID_DEPARTAMENTO1'
   },
-  departamento_nome: {
+  departamento1_nome: {
     type: DataTypes.STRING,
-    field: 'NOME_DEPARTAMENTO'
+    field: 'NOME_DEPARTAMENTO1'
   },
-  departamento_ativo: {
+  departamento1_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ATIVO_DEPARTAMENTO'
+    field: 'ATIVO_DEPARTAMENTO1'
   },
-  subdepartamento_id: {
+  departamento2_id: {
     type: DataTypes.INTEGER,
-    field: 'ID_SUBDEPARTAMENTO'
+    field: 'ID_DEPARTAMENTO2'
   },
-  subdepartamento_nome: {
+  departamento2_nome: {
     type: DataTypes.STRING,
-    field: 'NOME_SUBDEPARTAMENTO'
+    field: 'NOME_DEPARTAMENTO2'
   },
-  subdepartamento_ativo: {
+  departamento2_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ATIVO_SUBDEPARTAMENTO'
+    field: 'ATIVO_DEPARTAMENTO2'
+  },
+  departamento3_id: {
+    type: DataTypes.INTEGER,
+    field: 'ID_DEPARTAMENTO3'
+  },
+  departamento3_nome: {
+    type: DataTypes.STRING,
+    field: 'NOME_DEPARTAMENTO3'
+  },
+  departamento3_ativo: {
+    type: DataTypes.BOOLEAN,
+    field: 'ATIVO_DEPARTAMENTO3'
   },
   ncm_produto: {
     type: DataTypes.STRING,
