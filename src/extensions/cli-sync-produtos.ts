@@ -30,7 +30,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // const LOGS: any[] = [];
     // const AUTO_DESTAQUES: any = {};
-    const PRODUTO_FRACIONADO_FRACAO_DEFAULTS: any = {
+    const PRODUTO_FRACIONADO_FRACAO_DEFAULTS = {
       KG: 0.5,
       K: 0.5,
       GR: 500,
@@ -129,8 +129,8 @@ module.exports = (toolbox: GluegunToolbox) => {
         const PROD_BODY: any = {
           "atacado": {
             "status": !!chkBool(get(PRODUTO, 'atacadoStatus')),
-            "qtde": Number((get(PRODUTO, 'atacadoQtde') || '').replace(/,/g, '.')) || 0,
-            "preco": Number((get(PRODUTO, 'atacadoPreco') || '').replace(/,/g, '.')) || 0,
+            "qtde": Number((get(PRODUTO, 'atacadoQtde') || '')).toString().replace(/,/g, '.') || 0,
+            "preco": Number((get(PRODUTO, 'atacadoPreco') || '')).toString().replace(/,/g, '.') || 0,
           },
           "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
           "barcode": get(PRODUTO, 'barcodeProduto') || '',
@@ -154,23 +154,23 @@ module.exports = (toolbox: GluegunToolbox) => {
           "estoqueCritico": false,
           "fracao": {
             tipo: FRACIONADO_TIPO,
-            valor: Number(get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '') || 0,
+            valor: Number(get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '').toString().replace(/,/g, '.') || 0,
           },
           // "limiteVenda": {
           //   "max": Number(get(PRODUTO, 'preco') || 0),
           //   "min": Number(get(PRODUTO, 'preco') || 0),
           // },
-          "ncm": get(PRODUTO, 'ncmProduto') || '',
-          "nome": get(PRODUTO, 'nomeProduto') || '',
+          "ncm": PRODUTO?.ncmProduto || '',
+          "nome": PRODUTO?.nomeProduto || '',
           "preco": {
             desc: 0,
-            produto: Number((get(PRODUTO, 'precoVenda') || '').replace(/,/g, '.')) || 0,
+            produto: Number((PRODUTO?.precoVenda || '')).toString().replace(/,/g, '.') || 0,
           },
           // "tipoUnidadeFracao": FRACIONADO_TIPO,
           // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
         };
 
-        const FORCE_DEFAULT_ONLINE: any = get(configJson, 'forceDefaultOnline');
+        const FORCE_DEFAULT_ONLINE: any = configJson?.forceDefaultOnline;
         if (typeof FORCE_DEFAULT_ONLINE === 'boolean') { PROD_BODY.online = !!FORCE_DEFAULT_ONLINE; } // if
 
         // print.debug(`${PROD_ID}:${JSON.stringify(PROD_BODY)}`);
