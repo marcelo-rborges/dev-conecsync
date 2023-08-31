@@ -155,8 +155,8 @@ module.exports = (toolbox: GluegunToolbox) => {
             } // if
             if (db) {
               /*
+              SELECT
               const SQL_BARCODES: string = `
-                SELECT
                   *
                 FROM
                   ${produtosJson?.nomeView}

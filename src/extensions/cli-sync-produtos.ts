@@ -16,7 +16,7 @@ const JSONdb = require('simple-json-db');
 //#endregion 
 
 //#region libs
-import { chkBool } from '../libs';
+import { buildUrl, chkBool } from '../libs';
 //#endregion
 
 //#region models
@@ -59,6 +59,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       changed: 0,
       unchanged: 0
     };
+
+    let deptos = [];
 
     // JSONdb
     const DIR: string = `${os.tmpdir()}/hashes/${PROJETO}/lojas/${LOJA_ID}`;
@@ -186,7 +188,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
         const HASH_PROD: string = HASH(PROD_BODY) || '';
         const DB_HASH_PROD = get(DB_PRODUTOS.get(PROD_ID), 'hash') || '';
-        // print.highlight(`DRY-RUN:${!!DRY_RUN}, #${PROD_ID}, HASH_PROD:${HASH_PROD}, DB_HASH_PROD:${DB_HASH_PROD}`);
+        // print.debug(`DRY-RUN:${!!DRY_RUN}, #${PROD_ID}, HASH_PROD:${HASH_PROD}, DB_HASH_PROD:${DB_HASH_PROD}`);
         const HASH_CHANGED: boolean = HASH_PROD !== DB_HASH_PROD;
         TOTAL[HASH_CHANGED ? 'changed' : 'unchanged'] += 1;
         process.stdout.write(HASH_CHANGED ? '*' : '.');
@@ -204,11 +206,15 @@ module.exports = (toolbox: GluegunToolbox) => {
                   print.divider();
                 }); */
               // gluegun.http
-              await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              const RESP = await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              // print.debug(`\n#OK: ${PROD_ID}: ${JSON.stringify(RESP?.data)}`);
               // axios
               // const RET: AxiosResponse = 
               // await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
-              print.success(`\n#${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
+              // print.success(`\n#${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
+              deptos.push(`${RESP?.data?.departamentos?.d1?.id || ''},${RESP?.data?.departamentos?.d1?.nome || ''},${RESP?.data?.departamentos?.d2?.id || ''},${RESP?.data?.departamentos?.d2?.nome || ''},${RESP?.data?.departamentos?.d3?.id || ''},${RESP?.data?.departamentos?.d3?.nome || ''}`);
+              // deptos.push(`${RESP?.data?.departamentos?.d1?.id || ''},${RESP?.data?.departamentos?.d2?.id || ''},${RESP?.data?.departamentos?.d3?.id || ''}`);
+              print.success(`\n#${PROD_ID}: ${JSON.stringify(RESP?.data)}`);
               print.divider();
             } // if
           } catch (err) {
@@ -235,6 +241,54 @@ module.exports = (toolbox: GluegunToolbox) => {
       ],
       { format: 'lean' }
     );
+    if (!DRY_RUN) {
+      const UNIQUE = [];
+      deptos.forEach((s) => { if (!UNIQUE.includes(s)) { UNIQUE.push(s); } });
+      deptos = (UNIQUE || [])
+        .map(ad => (ad.split(',').filter(s => !!s)).join(','))
+        .filter(s => !!s.replace(/,/g, ''))
+        .filter(as => ((as.split(',') || []).length > 2));
+
+      print.divider();
+      print.warning('Verificando departamentos...')
+      print.divider();
+      for (const ad of (deptos || [])) {
+        try {
+          // let path = `/departamentos/${PROD_ID}`
+          // print.debug(ad);
+          const CELLS = ad.split(',');
+          if (CELLS?.length === 4 || CELLS?.length === 6) {
+            const [D1, N1, D2, N2, D3, N3] = CELLS;
+            // print.debug([D1, N1, D2, N2, D3, N3]);
+            let nome: string = N1;
+
+            // let url = new URL(`/departamentos/${D1}`);
+            // !!D2 && url.searchParams.append('id2', D2);
+            // !!D3 && url.searchParams.append('id3', D3);
+            // print.debug(url);
+
+            const PARAMS: any = {};
+            if (!!D2) { PARAMS.id2 = D2; nome = N2; }
+            if (!!D3) { PARAMS.id3 = D3; nome = N3; }
+
+            // /departamentos/OrlVI1XYyxM2519fc3Mq?id2=mowjjkPCnDRsL5zGMw1n&id3=FNbVRuxJfcqGcPVo42XY
+            const URL: string = buildUrl(`/departamentos/${D1}`, PARAMS);
+            // print.debug(URL);
+            const CHANGES: any = {
+              nome,
+              _refresh: Math.random().toString(36).slice(2, 10),
+            };
+            await API.post(URL, CHANGES);
+            print.success(`\n#${nome}: ${JSON.stringify(CHANGES)}`);
+
+            // const RESP = await API.post(path, PROD_BODY);
+            print.divider();
+          } // if
+        } catch (err) {
+          !!err && print.warning(err);
+        } // try-catch
+      } // for-of
+    } // if
 
     /*
     function hasSub(
