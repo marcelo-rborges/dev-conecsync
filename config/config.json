@@ -2,5 +2,7 @@
   "db": "",
   "csvs": "\/home\/conecdata\/csvs",
   "sandbox": true,
-  "forceDefaultOnline": true
+  "onlineStatus": "auto",
+  "usaNomesBase": true,
+  "usaDepartamentosBase": true
 }

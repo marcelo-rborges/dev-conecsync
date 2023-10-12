@@ -85,10 +85,16 @@ module.exports = (toolbox: GluegunToolbox) => {
       db: CONFIG_DB,
       csvs: CONFIG_CSVS,
       sandbox: CONFIG_SANDBOX,
+      onlineStatus: CONFIG_ONLINE_STATUS,
+      usaNomesBase: CONFIG_USA_NOME_BASE,
+      usaDepartamentosBase: CONFIG_USA_DEPARTAMENTOS_BASE,
     } = configJson;
     // const SANDBOX: boolean = !!get(config, 'sandbox');
     LOGS.push(['Conexão DB em uso', CONFIG_DB || '-']);
     LOGS.push(['Pasta CSVS', CONFIG_CSVS || '-']);
+    LOGS.push(['onlineStatus', CONFIG_ONLINE_STATUS || '-']);
+    LOGS.push(['usaNomesBase', CONFIG_USA_NOME_BASE ?? '-']);
+    LOGS.push(['usaDepartamentosBase', CONFIG_USA_DEPARTAMENTOS_BASE ?? '-']);
     LOGS.push(['Pasta temporária', os.tmpdir()]);
     LOGS.push(['Modo sandbox', !!CONFIG_SANDBOX ? 'habilitado' : 'DESABILITADO']);
 

@@ -20,6 +20,7 @@ import { buildUrl, chkBool } from '../libs';
 //#endregion
 
 //#region models
+type TStatusOnlineProduto = 'on' | 'off' | 'auto';
 const configJson = require('../../config/config.json');
 //#endregion
 
@@ -113,8 +114,10 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.warning('Sincronizando produtos...')
     print.divider();
     for (const PRODUTO of PRODUTOS_ALL) {
+      // console.log(PRODUTO);
       // print.debug(`${PRODUTO.ID_PRODUTO}:${JSON.stringify(PRODUTO)}`);
       // TODO: Calcular estoqueCritico usando qtde_estoque_minimo <-> qtde_estoque_atual
+      const BARCODE: string = String(get(PRODUTO, 'barcodeProduto') || '').trim();
       const PROD_ID: string = String(get(PRODUTO, 'idProduto') || '');
       // print.debug(`PROD_ID:${PROD_ID}`);
       const DEPTO1_ID: string = String(get(PRODUTO, 'idDepartamento1') || '');
@@ -135,7 +138,7 @@ module.exports = (toolbox: GluegunToolbox) => {
             "preco": Number((get(PRODUTO, 'atacadoPreco') || '')).toString().replace(/,/g, '.') || 0,
           },
           "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
-          "barcode": get(PRODUTO, 'barcodeProduto') || '',
+          "barcode": BARCODE,
           "departamento1": {
             "id": DEPTO1_ID,
             "nome": get(PRODUTO, 'nomeDepartamento1') || '',
@@ -170,10 +173,17 @@ module.exports = (toolbox: GluegunToolbox) => {
           },
           // "tipoUnidadeFracao": FRACIONADO_TIPO,
           // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
+          "usaNomesBase": chkBool(configJson?.usaNomesBase),
+          "usaDepartamentosBase": chkBool(configJson?.usaDepartamentosBase),
         };
 
-        const FORCE_DEFAULT_ONLINE: any = configJson?.forceDefaultOnline;
-        if (typeof FORCE_DEFAULT_ONLINE === 'boolean') { PROD_BODY.online = !!FORCE_DEFAULT_ONLINE; } // if
+        const ONLINE_STATUS: TStatusOnlineProduto = configJson?.statusOnline;
+        // if (typeof ONLINE_STATUS === 'boolean') { PROD_BODY.online = !!ONLINE_STATUS; } // if
+        PROD_BODY.online = ONLINE_STATUS === 'on'
+          ? true
+          : ONLINE_STATUS === 'off'
+            ? false
+            : !!BARCODE;
 
         // print.debug(`${PROD_ID}:${JSON.stringify(PROD_BODY)}`);
 
@@ -248,6 +258,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         .map(ad => (ad.split(',').filter(s => !!s)).join(','))
         .filter(s => !!s.replace(/,/g, ''))
         .filter(as => ((as.split(',') || []).length > 2));
+      // console.log(deptos);
 
       print.divider();
       print.warning('Verificando departamentos...')

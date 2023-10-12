@@ -49,15 +49,39 @@ module.exports = (toolbox: GluegunToolbox) => {
     );
     print.highlight(
       '  TRUE: Modo desenvolvimento ou sandbox, apenas para testes de integração, sincronizam em lojas que não atendem de fato os pedidos.'
-    );print.highlight(
+    );
+    print.highlight(
       '  FALSE: Modo produção, sincroniza com lojas reais da plataforma.'
     );
-    print.warning('- Essa selecão deve corresponder aos tipos de tokens de loja indicados (desenvolvimento/produção) em "/config/destinos/*.json" ou suas chamadas à api serão recusadas.')
+    print.warning('- Essa selecão deve corresponder aos tipos de tokens de loja indicados (desenvolvimento/produção) em "/config/destinos/*.json" ou suas chamadas à api serão recusadas.');
     print.divider();
 
     print.table(
       [
-        ['forceDefaultOnline (opcional)', 'Força flag online true/false para TODOS produtos.']
+        // ['statusOnline (opcional)', 'Força flag online true/false para TODOS produtos.']
+        ['statusOnline', 'Força flag online true/false para TODOS produtos.']
+      ]
+    );
+    print.highlight(
+      '              on: Todos os produtos com online TRUE.'
+    );
+    print.highlight(
+      '             off: Todos os produtos com online FALSE.'
+    );
+    print.highlight(
+      '  auto (default): Online de produtos com barcode TRUE e sem barcode FALSE.'
+    );
+    print.divider();
+
+    print.table(
+      [
+        ['usaNomesBase', 'Para produtos com barcode, força uso do nome no cadastro, ignorando o encontrado na base de produtos.']
+      ]
+    );
+
+    print.table(
+      [
+        ['usaDepartamentosBase', 'Para produtos com barcode, força uso de departamentos no cadastro, ignorando os encontrados na base de produtos.']
       ]
     );
   }
