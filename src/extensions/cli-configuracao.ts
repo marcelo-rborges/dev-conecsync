@@ -31,7 +31,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         ['db (opcional)', 'Seleção de tipo de conexão com banco de dados.'],
       ]
     );
-    print.highlight("  Opções disponíveis: '' | 'firebird' | 'mariadb' | 'mongodb' | 'mssql' | 'mysql' | 'postgres'.");
+    print.highlight("  Opções disponíveis: '' | 'firebird' | 'mariadb' | 'mssql' | 'mysql' | 'postgres'.");
     print.divider();
 
     print.table(
@@ -71,6 +71,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.highlight(
       '  auto (default): Online de produtos com barcode TRUE e sem barcode FALSE.'
     );
+    print.warning('- Essa configuração só é aplicada quando o cadastro de produtos na loja na plataforma estiver vazio, ou seja na primeira carga de produtos realizada.');
     print.divider();
 
     print.table(

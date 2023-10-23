@@ -1,5 +1,5 @@
 {
-  "nomeView": "VIEW_CONECDATA_PRODUTOS",
-  "arquivoCsv": "",
+  "nomeView": "",
+  "arquivoCsv": "mineiro_1.csv",
   "schemaNoSql": false
 }

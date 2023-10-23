@@ -60,9 +60,9 @@ module.exports = (toolbox: GluegunToolbox) => {
         let rows = data.trim().split('\n');
         rows.filter(r => r.trim() && r && r[0] !== '*');
         const LR: number = rows.length;
-        let resultado = LR - 1;
+        // let resultado = LR - 1;
         // print.info(rows);
-        print.info(`${resultado} produto(s)`);
+        // print.info(`${resultado} produto(s)`);
 
         const HEADER: string[] = rows[0].split(';');
         // print.info(`Header: ${HEADER}`);
