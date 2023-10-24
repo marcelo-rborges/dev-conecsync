@@ -153,28 +153,17 @@ module.exports = (toolbox: GluegunToolbox) => {
             "id": DEPTO3_ID,
             "nome": get(PRODUTO, 'nomeDepartamento3') || '',
           },
-          // "departamento3": {
-          //   // "ativo": !!chkBool(get(PRODUTO, 'ativoSubdepartamento', true)),
-          //   "id": SUB_ID2,
-          //   "nome": get(PRODUTO, 'nomeSubdepartamento2') || '',
-          // },
           "estoqueCritico": false,
           "fracao": {
             tipo: FRACIONADO_TIPO,
             valor: Number(get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '').toString().replace(/,/g, '.') || 0,
           },
-          // "limiteVenda": {
-          //   "max": Number(get(PRODUTO, 'preco') || 0),
-          //   "min": Number(get(PRODUTO, 'preco') || 0),
-          // },
           "ncm": PRODUTO?.ncmProduto || '',
           "nome": PRODUTO?.nomeProduto || '',
           "preco": {
             desc: 0,
             produto: Number((PRODUTO?.precoVenda || '')).toString().replace(/,/g, '.') || 0,
           },
-          // "tipoUnidadeFracao": FRACIONADO_TIPO,
-          // "usaDepartamentoBase": !!chkBool(CONFIG_USA_DEPARTAMENTOS_BASE),
           "usaNomesBase": chkBool(configJson?.usaNomesBase),
           "usaDepartamentosBase": chkBool(configJson?.usaDepartamentosBase),
         };
