@@ -16,11 +16,11 @@ const JSONdb = require('simple-json-db');
 //#endregion 
 
 //#region libs
-import { buildUrl, chkBool } from '../libs';
+import { buildUrl, chkBool, isBarcode } from '../libs';
 //#endregion
 
 //#region models
-type TStatusOnlineProduto = 'on' | 'off' | 'auto';
+type TStatusOnlineProduto = 'on' | 'off' | 'auto' | 'fauto';
 const configJson = require('../../config/config.json');
 //#endregion
 
@@ -96,6 +96,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     // const PRODUTOS_BARCODES: any[] = get(props, 'produtos.barcodes') || [];
     // const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
     // const PRODUTOS_ALL: any[] = PRODUTOS_BARCODES.concat(PRODUTOS_NBARCODES);
+    const ONLINE_STATUS: TStatusOnlineProduto = configJson?.onlineStatus;
     const PRODUTOS_ALL: any[] = get(props, 'produtos') || [];
     // print.debug(PRODUTOS_ALL);
     const PRODUTOS_SOME = (await API.get('/produtos/flags/some'))?.data?.some;
@@ -104,6 +105,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       [
         ['Produto(s) encontrado(s)', String(PRODUTOS_ALL.length)],
         ['Primeira carga', !!PRODUTOS_SOME ? 'Não' : 'Sim'],
+        ['Online status', ONLINE_STATUS],
         // ['Produto(s) com barcodes(s)', String(PRODUTOS_BARCODES.length)],
         // ['Produto(s) sem barcodes(s)', String(PRODUTOS_NBARCODES.length)],
         // ['Departamento(s) encontrado(s)', String(DEPTOS_ALL.length)],
@@ -113,13 +115,14 @@ module.exports = (toolbox: GluegunToolbox) => {
     );
 
     print.divider();
-    print.warning('Sincronizando produtos...')
+    print.warning('Sincronizando produtos...');
     print.divider();
     for (const PRODUTO of PRODUTOS_ALL) {
       // console.log(PRODUTO);
       // print.debug(`${PRODUTO.ID_PRODUTO}:${JSON.stringify(PRODUTO)}`);
       // TODO: Calcular estoqueCritico usando qtde_estoque_minimo <-> qtde_estoque_atual
-      const BARCODE: string = String(get(PRODUTO, 'barcodeProduto') || '').trim();
+      const BARCODE_PRODUTO: string = String(get(PRODUTO, 'barcodeProduto') || '').trim();
+      const BARCODE = !!isBarcode(BARCODE_PRODUTO) ? BARCODE_PRODUTO : '';
       const PROD_ID: string = String(get(PRODUTO, 'idProduto') || '');
       // print.debug(`PROD_ID:${PROD_ID}`);
       const DEPTO1_ID: string = String(get(PRODUTO, 'idDepartamento1') || '');
@@ -168,8 +171,8 @@ module.exports = (toolbox: GluegunToolbox) => {
           "usaDepartamentosBase": chkBool(configJson?.usaDepartamentosBase),
         };
 
-        if (!PRODUTOS_SOME) {
-          const ONLINE_STATUS: TStatusOnlineProduto = configJson?.statusOnline;
+        // print.warning(PRODUTO?.nomeProduto + ' ' + BARCODE);
+        if (!PRODUTOS_SOME || ONLINE_STATUS === 'fauto') {
           // if (typeof ONLINE_STATUS === 'boolean') { PROD_BODY.online = !!ONLINE_STATUS; } // if
           PROD_BODY.online = ONLINE_STATUS === 'on'
             ? true

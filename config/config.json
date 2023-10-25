@@ -1,8 +1,8 @@
 {
-  "db": "",
-  "csvs": "/home/conecdata/csvs",
+  "db": "firebird",
+  "csvs": "",
   "sandbox": true,
-  "onlineStatus": "auto",
+  "onlineStatus": "fauto",
   "usaNomesBase": true,
   "usaDepartamentosBase": true
 }
