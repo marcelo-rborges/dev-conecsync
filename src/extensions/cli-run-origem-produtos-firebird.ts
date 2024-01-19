@@ -9,49 +9,82 @@ import { fixBuffStr } from '../libs/buff2str';
 //#endregion 
 
 //#region models
-const configJson = require('../../config/config.json');
+// const configJson = require('../../config/config.json');
 const firebirdJson = require('../../config/conexoes/firebird.json');
+const produtosJson = require('../../config/origens/produtos.json');
 const FIREBIRD = require('node-firebird');
+import { DEBUG } from '../models/consts';
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.runOrigemProdutosFirebird = async (props: any) => {
     const { print } = toolbox;
 
-    function dbQuery(
+    // function jsonC(jsonC) {
+    //   var i = 0;
+
+    //   return function (key, value) {
+    //     if (i !== 0 && typeof (jsonC) === 'object' && typeof (value) == 'object' && jsonC == value)
+    //       return '[Circular]';
+
+    //     if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
+    //       return '[Unknown]';
+
+    //     ++i; // so we know we aren't using the original object anymore
+
+    //     return value;
+    //   }
+    // }
+
+    const dbQuery = (
       db: any,
       sql: string
-    ): Promise<any[]> {
+    ): Promise<any[]> => {
       return new Promise((resolve, reject) => {
         if (db) {
           db.query(
             sql,
             (err, result) => {
-              if (err) {
-                throw err;
-              }
-              const RESULTADO = result.map((row) => ({
-                loja_id: fixBuffStr(row.LOJA_ID),
-                id: fixBuffStr(row.ID),
-                barcode: fixBuffStr(row.BARCODE),
-                preco: fixBuffStr(row.PRECO),
-                departamento_id: fixBuffStr(row.DEPARTAMENTO_ID),
-                departamento_nome: fixBuffStr(row.DEPARTAMENTO_NOME),
-                departamento_ativo: fixBuffStr(row.DEPARTAMENTO_ATIVO),
-                subdepartamento_id: fixBuffStr(row.SUBDEPARTAMENTO_ID),
-                subdepartamento_nome: fixBuffStr(row.SUBDEPARTAMENTO_NOME),
-                subdepartamento_ativo: fixBuffStr(row.SUBDEPARTAMENTO_ATIVO),
-                nome: fixBuffStr(row.NOME),
-                estoque_controlado: fixBuffStr(row.ESTOQUE_CONTROLADO),
-                qtde_estoque_minimo: fixBuffStr(row.QTDE_ESTOQUE_MINIMO),
-                qtde_estoque_atual: fixBuffStr(row.QTDE_ESTOQUE_ATUAL),
-                atacado_status: fixBuffStr(row.ATACADO_STATUS),
-                atacado_preco: fixBuffStr(row.ATACADO_PRECO),
-                atacado_qtde: fixBuffStr(row.ATACADO_QTDE),
-                tipo_unidade_fracao: fixBuffStr(row.TIPO_UNIDADE_FRACAO),
-                ativo: fixBuffStr(row.ATIVO)
-              }))
-              resolve(RESULTADO);
+              // !!DEBUG && print.debug(`sql:${sql}, err:${err}, result:${result}`);
+              if (err) { throw err; }
+
+              // PERCENTUAL_LIMITE_VENDA, QTDE_LIMITE_VENDA, FRACIONADO_STATUS, FRACIONADO_FRACAO, FRACIONADO_PERC_DESC_PROMO_AUTO, DESCRICAO_PRODUTO, DESTAQUE
+
+              if (!!result) {
+                const RESULTADO = (result || []).map(
+                  (row: any) => {
+                    return {
+                      idLoja: fixBuffStr(get(row, 'ID_LOJA')) || '',
+                      idProduto: fixBuffStr(get(row, 'ID_PRODUTO')) || '',
+                      barcodeProduto: fixBuffStr(get(row, 'BARCODE_PRODUTO')) || '',
+                      precoVenda: fixBuffStr(get(row, 'PRECO_VENDA')) || '',
+                      idDepartamento1: fixBuffStr(get(row, 'ID_DEPARTAMENTO1')) || '',
+                      nomeDepartamento1: fixBuffStr(get(row, 'NOME_DEPARTAMENTO1')) || '',
+                      ativoDepartamento1: fixBuffStr(get(row, 'ATIVO_DEPARTAMENTO1')) || '',
+                      idDepartamento2: fixBuffStr(get(row, 'ID_DEPARTAMENTO2')) || '',
+                      nomeDepartamento2: fixBuffStr(get(row, 'NOME_DEPARTAMENTO2')) || '',
+                      ativoDepartamento2: fixBuffStr(get(row, 'ATIVO_DEPARTAMENTO2')) || '',
+                      idDepartamento3: fixBuffStr(get(row, 'ID_DEPARTAMENTO3')) || '',
+                      nomeDepartamento3: fixBuffStr(get(row, 'NOME_DEPARTAMENTO3')) || '',
+                      ativoDepartamento3: fixBuffStr(get(row, 'ATIVO_DEPARTAMENTO3')) || '',
+                      ncmProduto: (fixBuffStr((get(row, 'NCM_PRODUTO'))) || '').replace(/\D/g, ''),
+                      nomeProduto: fixBuffStr(get(row, 'NOME_PRODUTO')) || '',
+                      estoqueControlado: fixBuffStr(get(row, 'ESTOQUE_CONTROLADO')) || '',
+                      qtdeEstoqueMinimo: fixBuffStr(get(row, 'QTDE_ESTOQUE_MINIMO')) || '',
+                      qtdeEstoqueAtual: fixBuffStr(get(row, 'QTDE_ESTOQUE_ATUAL')) || '',
+                      atacadoStatus: fixBuffStr(!!get(row, 'ATACADO_STATUS')),
+                      atacadoPreco: fixBuffStr(get(row, 'ATACADO_PRECO')) || '',
+                      atacadoQtde: fixBuffStr(get(row, 'ATACADO_QTDE')) || '',
+                      fracionadoTipo: fixBuffStr(get(row, 'FRACIONADO_TIPO')) || '',
+                      ativoProduto: fixBuffStr(get(row, 'ATIVO_PRODUTO')) || ''
+                    }
+                  }
+                );
+                // !!DEBUG && print.debug(`RESULTADO:${JSON.stringify(RESULTADO)}`);
+                resolve(RESULTADO);
+              } else {
+                resolve([]);
+              } // else 
             }
           );
         } else {
@@ -95,47 +128,82 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.divider();
       toolbox.conexoes();
       return;
-    }
+    } // if
+
+    //   Firebird.attach(options, function(err, db) {
+
+    //     if (err)
+    //         throw err;
+
+    //     // db = DATABASE
+    //     db.query('SELECT * FROM TABLE', function(err, result) {
+    //         // IMPORTANT: close the connection
+    //         db.detach();
+    //     });
+
+    // });
 
     try {
-
-      if (FIREBIRD) {
+      if (!!FIREBIRD) {
         FIREBIRD.attach(
           firebirdJson,
           async (err, db) => {
+            // !!DEBUG && print.debug(`err:${err}, db:${JSON.stringify(db, jsonC(db))}`);
             if (err) {
               print.error(err);
               throw err;
             } // if
             if (db) {
+              /*
+              SELECT
+              const SQL_BARCODES: string = `
+                  *
+                FROM
+                  ${produtosJson?.nomeView}
+                WHERE
+                  id_loja = ${LOJA.id}
+                AND
+                  barcode_produto != ''
+              `;
+              !!DEBUG && print.debug(`SQL_BARCODES:${SQL_BARCODES}`);
               const PRODUTOS_BARCODES: any[] =
                 await dbQuery(
                   db,
-                  `
-                    SELECT
-                      *
-                    FROM
-                      ${configJson.origens.produtos.nomeView}
-                    WHERE
-                      loja_id = ${LOJA.id}
-                    AND
-                      barcode != ''
-                  `
+                  SQL_BARCODES
                 );
+              const SQL_NBARCODES: string = `
+                  SELECT
+                    *
+                  FROM
+                    ${produtosJson?.nomeView}
+                  WHERE
+                    id_loja = ${LOJA.id}
+                  AND
+                    barcode_produto = ''
+                    `;
+              // ${configJson.origens.produtos.nomeView}
+              !!DEBUG && print.debug(`SQL_NBARCODES:${SQL_NBARCODES}`);
               const PRODUTOS_NBARCODES: any[] =
                 await dbQuery(
                   db,
-                  `
-                    SELECT
-				              *
-                    FROM
-			  	            ${configJson.origens.produtos.nomeView}
-			              WHERE
-				              loja_id = ${LOJA.id}
-			              AND
-				              barcode = ''
-                  `
-                )
+                  SQL_NBARCODES
+                );
+              */
+
+              const SQL: string = `
+                SELECT
+                  *
+                FROM
+                  ${produtosJson?.nomeView}
+                WHERE
+                  id_loja = ${LOJA.id}
+              `;
+              !!DEBUG && print.debug(`SQL:${SQL}`);
+              const PRODUTOS: any[] =
+                await dbQuery(
+                  db,
+                  SQL
+                );
 
               db.detach();
 
@@ -145,17 +213,16 @@ module.exports = (toolbox: GluegunToolbox) => {
                   projeto: PROJETO,
                   loja: LOJA,
                   apiUrl: API_URL,
-                  produtos: {
-                    barcodes: PRODUTOS_BARCODES,
-                    nbarcodes: PRODUTOS_NBARCODES
-                  }
+                  produtos: PRODUTOS // {
+                  // barcodes: PRODUTOS_BARCODES,
+                  // nbarcodes: PRODUTOS_NBARCODES
+                  // }
                 }
               );
-            }
+            } // if
           }
-        )
-      }
-      
+        );
+      } // if
     } catch (error) {
       print.error(get(error, 'message'));
     }

@@ -8,14 +8,21 @@ const { Op } = require('sequelize');
 //#endregion 
 
 //#region models
-const sequelizeConn = require('../libs/sequelize-conn');
+import { connect } from '../libs'
 import { CAMPOS_PRODUTOS } from '../models/consts';
 // const configJson = require('../../config/config.json');
 const produtosJson = require('../../config/origens/produtos.json');
-const mariadbJson = require('../../config/conexoes/mariadb.json');
-const mysqlJson = require('../../config/conexoes/mysql.json');
-const mssqlJson = require('../../config/conexoes/mssql.json');
-const postgresqlJson = require('../../config/conexoes/postgresql.json');
+const mariadb = require('../../config/conexoes/mariadb.json');
+const mysql = require('../../config/conexoes/mysql.json');
+const mssql = require('../../config/conexoes/mssql.json');
+const postgres = require('../../config/conexoes/postgres.json');
+
+// const SEQUELIZE: any = {
+//   mssql,
+//   mysql,
+//   mariadb,
+//   postgres
+// };
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -40,10 +47,10 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // Verifica configuração da conexão selecionada
     const CONEXOES = {
-      mariadb: mariadbJson,
-      mysql: mysqlJson,
-      mssql: mssqlJson,
-      postgresql: postgresqlJson,
+      mariadb: mariadb,
+      mysql: mysql,
+      mssql: mssql,
+      postgres: postgres,
     };
 
     const {
@@ -52,8 +59,6 @@ module.exports = (toolbox: GluegunToolbox) => {
       usuario: USUARIO,
       senha: SENHA
     } = CONEXOES[TIPO_CONEXAO];
-
-    // print.warning(CONEXOES[TIPO_CONEXAO]);
 
     if (
       !HOST
@@ -70,7 +75,8 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
 
     try {
-      sequelize = await sequelizeConn(TIPO_CONEXAO);
+
+      sequelize = await connect(TIPO_CONEXAO);
 
       const Produtos = sequelize.define(
         'Produto',
@@ -82,6 +88,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           tableName: get(produtosJson, 'nomeView') || ''
         }
       );
+      
       const PRODUTOS_BARCODES = (await Produtos.findAll(
         {
           where: {
@@ -92,7 +99,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           }
         }
       ) || [])
-        .map((p: any) => get(p, 'dataValues'));
+        .map((p: any) => get(p, 'dataValues'));      
 
       const PRODUTOS_NBARCODES = (await Produtos.findAll(
         {
@@ -106,8 +113,8 @@ module.exports = (toolbox: GluegunToolbox) => {
 
       // TODO: verificar barcodes com barcodeFixed() e transferir os recusados.
 
-      // print.success(PRODUTOS_BARCODES.length);
-      // print.success(PRODUTOS_NBARCODES.length);
+      print.success(PRODUTOS_BARCODES.length);
+      print.success(PRODUTOS_NBARCODES.length);
       toolbox.runSyncProdutos(
         {
           dryRun: DRY_RUN,
@@ -129,4 +136,29 @@ module.exports = (toolbox: GluegunToolbox) => {
       };
     } // try-catch
   };
+
+  // function connect(db): Promise<any> {
+  //   return new Promise(
+  //     async (resolve, reject) => {
+  //       let sequelize = new Sequelize(
+  //         SEQUELIZE[db].tabela,
+  //         SEQUELIZE[db].usuario,
+  //         SEQUELIZE[db].senha,
+  //         {
+  //           host: SEQUELIZE[db].host,
+  //           dialect: 'postgres',
+  //         }
+  //       );
+  
+  //       try {
+  //         await sequelize.authenticate();
+  //         // await sequelize.authenticate();
+  //         resolve(sequelize);
+  //       } catch (error) {
+  //         const ERR: string = `${db.toUpperCase()} falha de conexão: ${error.message}`;
+  //         print.error(ERR);
+  //         reject(ERR);
+  //       } // try-catch
+  //     });
+  // }
 }

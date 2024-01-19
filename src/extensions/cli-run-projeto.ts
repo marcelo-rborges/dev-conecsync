@@ -69,6 +69,18 @@ module.exports = (toolbox: GluegunToolbox) => {
               }
             );
             break;
+          
+          // case 'formasPgto':
+          //   toolbox.runOrigemFormasPgto(
+          //     {
+          //       dryRun: DRY_RUN,
+          //       projeto: PROJETO,
+          //       apiUrl: API_URL,
+          //       loja: LOJA,
+          //       origem: ORIGEM
+          //     }
+          //   );
+          //   break;
 
           default:
             break;

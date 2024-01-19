@@ -6,16 +6,16 @@ const { Sequelize } = require('sequelize');
 const mssql = require('../../config/conexoes/mssql.json');
 const mysql = require('../../config/conexoes/mysql.json');
 const mariadb = require('../../config/conexoes/mariadb.json');
-const postgresql = require('../../config/conexoes/postgresql.json');
+const postgres = require('../../config/conexoes/postgres.json');
 const SEQUELIZE: any = {
   mssql,
   mysql,
   mariadb,
-  postgresql
+  postgres
 };
 //#endregion
 
-function connect(db): Promise<any> {
+export function connect(db): Promise<any> {
   return new Promise(
     async (resolve, reject) => {
       let sequelize = new Sequelize(
@@ -38,4 +38,4 @@ function connect(db): Promise<any> {
     });
 }
 
-module.exports = connect;
+// module.exports = connect;

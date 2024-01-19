@@ -1,6 +1,6 @@
 {
+  "type": "",
   "host": "",
-  "database": "",
-  "usuario": "",
-  "senha": ""
+  "port": "",
+  "database": ""
 }

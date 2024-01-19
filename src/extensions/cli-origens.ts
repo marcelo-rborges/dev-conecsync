@@ -3,11 +3,11 @@ import { GluegunToolbox } from 'gluegun';
 //#endregion
 
 //#region models
-const estoque = require('../../config/origens/estoque.json');
-const formasPgto = require('../../config/origens/formas-pgto.json');
-const produtosPromocoes = require('../../config/origens/produtos-promocoes.json');
+// const estoque = require('../../config/origens/estoque.json');
+// const formasPgto = require('../../config/origens/formas-pgto.json');
+// const produtosPromocoes = require('../../config/origens/produtos-promocoes.json');
 const produtos = require('../../config/origens/produtos.json');
-const promocoes = require('../../config/origens/promocoes.json');
+// const promocoes = require('../../config/origens/promocoes.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -17,17 +17,18 @@ module.exports = (toolbox: GluegunToolbox) => {
     print.table(
       [
         ['/config/origens/*.json', 'Conteúdo'],
-        ['Estoque', JSON.stringify(estoque)],
-        ['Formas Pgto', JSON.stringify(formasPgto)],
-        ['Produtos Promoções', JSON.stringify(produtosPromocoes)],
+        // ['Estoque', JSON.stringify(estoque)],
+        // ['Formas Pgto', JSON.stringify(formasPgto)],
+        // ['Produtos Promoções', JSON.stringify(produtosPromocoes)],
         ['Produtos', JSON.stringify(produtos)],
-        ['Promoções', JSON.stringify(promocoes)]
+        // ['Promoções', JSON.stringify(promocoes)]
       ],
       { format: 'lean' }
     );
     print.divider();
 
     print.warning('Propriedades:');
+    print.warning(produtos);
     print.divider();
 
     print.table(
@@ -35,7 +36,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         ['tipoConexao', 'Formato a ser utilizado na coleta de dados dessa origem.']
       ]
     );
-    print.highlight("  Opções disponíveis: '' | 'csv' | 'mongodb' | 'firebird'* | 'mariadb'* | 'mssql'* | 'mysql'* | 'postgresql'*");
+    print.highlight("  Opções disponíveis: '' | 'csv' | 'mongodb' | 'firebird'* | 'mariadb'* | 'mssql'* | 'mysql'* | 'postgres'*");
     print.warning(
       "- * exigem também a indicação de 'nomeView' (ou essa origem será ignorada)."
     );

@@ -1,0 +1,49 @@
+USE [MDADOS]
+GO
+
+/****** Object:  View [dbo].[View_IntegracaoMercadeiro]    Script Date: 04/30/2021 10:13:01 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+ALTER VIEW [dbo].[View_IntegracaoMercadeiro]
+AS
+SELECT        LITLOJA AS Id_loja,
+                             (SELECT        ISNULL(SECDESCRI, 'Diversos') AS Expr1
+                               FROM            dbo.CADSEC
+                               WHERE        (SECSECAO = dbo.VPRODLOJA.GERSECAO) AND (SECGRUPO = 0) AND (SECSUBGRUPO = 0)) AS Departamento,
+                             (SELECT        ISNULL(SECDESCRI, 'Diversos') AS Expr1
+                               FROM            dbo.CADSEC AS CADSEC_2
+                               WHERE        (SECSECAO = dbo.VPRODLOJA.GERSECAO) AND (SECGRUPO = dbo.VPRODLOJA.GERGRUPO) AND (SECSUBGRUPO = 0)) AS Categoria,
+                             (SELECT        ISNULL(SECDESCRI, 'Diversos') AS Expr1
+                               FROM            dbo.CADSEC AS CADSEC_1
+                               WHERE        (SECSECAO = dbo.VPRODLOJA.GERSECAO) AND (SECGRUPO = dbo.VPRODLOJA.GERGRUPO) AND (SECSUBGRUPO = dbo.VPRODLOJA.GERSUBGRUPO)) AS SubCategoria,
+					     GERMARCA AS Marca, 
+                         GERTIPVEN AS Unidade, '' AS Volume,
+						 EANCODIGO as codigo_barra, 
+						 GERDESCRICAO AS Nome,
+						  	   mdados.dbo.FormataData(0,GerEntLin) as dt_Cadastro,
+							  dbo.PegaApenasPreco(LitLoja,1,dbo.DataDoDia(),LitCodReduz) as Vlr_produto,
+							  dbo.PegaApenasOferta(LitLoja,1,dbo.DataDoDia(),LitCodReduz) as Vlr_promocao,
+							    LITESTQD AS qtd_estoque_atual, 
+						  GERDESCRICAO AS Descricao,
+						   CASE WHEN GerSaiLin = 0 THEN 'S' ELSE 'N' END AS ativo,
+						    GERCODREDUZ AS plu,
+				1 as online_departamento
+					FROM            dbo.VPRODLOJA,
+                dbo.CADEAN,
+				dbo.FORITM
+WHERE  EANCODREDUZ = LITCODREDUZ AND
+       EANVENDA    = 0           AND
+       FITCODFOR   = 1           AND
+	   FITCODREDUZ = LITCODREDUZ AND
+       LITLOJA = 1
+
+
+GO
+
+

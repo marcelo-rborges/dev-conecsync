@@ -1,1 +1,1 @@
-export type TConexaoDb = '' | 'firebird' | 'mariadb' | 'mongodb' | 'mssql' | 'postgresql' | 'mysql';
+export type TConexaoDb = '' | 'firebird' | 'mariadb' | 'mongodb' | 'mssql' | 'postgres' | 'mysql';

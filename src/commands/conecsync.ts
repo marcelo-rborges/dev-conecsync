@@ -1,8 +1,10 @@
+//#region gluegun
 import { GluegunCommand } from 'gluegun';
+//#endregion
 
 const command: GluegunCommand = {
   name: 'conecsync',
-  description: 'help + diag (modo simulação).',
+  description: 'help + info.',
   run: async (toolbox) => {
     const { print } = toolbox;
 
@@ -10,7 +12,7 @@ const command: GluegunCommand = {
     print.printHelp(toolbox);
     print.newline();
 
-    toolbox.run('--dry-run');
+    toolbox.run('--info');
   },
 }
 

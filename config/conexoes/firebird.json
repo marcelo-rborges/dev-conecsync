@@ -1,10 +1,11 @@
 {
   "host": "127.0.0.1",
   "port": 3050,
-  "database": "hypico",
+  "database": "D:\/clientes\/fb\/supermercado-mineiro\/TGA.FDB",
   "user": "SYSDBA",
   "password": "masterkey",
   "lowercase_keys": false,
   "role": null,
-  "pageSize": 4096
+  "pageSize": 4096,
+  "encoding": "ISO8859_1"
 }

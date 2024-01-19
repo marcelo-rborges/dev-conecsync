@@ -1,6 +1,6 @@
 {
   "host": "127.0.0.1",
-  "tabela": "",
+  "tabela": "hypico",
   "usuario": "conecdata",
   "senha": "masterkey"
 }

@@ -1,4 +1,5 @@
 {
-  "tipoConexao": "", 
-  "nomeView": "" 
+  "nomeView": "VIEW_CONECDATA_PRODUTOS",
+  "arquivoCsv": "",
+  "schemaNoSql": false
 }

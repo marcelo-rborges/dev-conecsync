@@ -8,9 +8,13 @@ const {
 //#endregion
 
 //#region dbs
-export const SUPPORTED_SQLS = ['firebird', 'mariadb', 'mssql', 'mysql', 'postgresql'];
+export const SUPPORTED_SQLS = ['firebird', 'mariadb', 'mssql', 'mysql', 'postgres'];
 export const SUPPORTED_NOSQLS = ['mongodb'];
 export const SUPPORTED_ALL = [...SUPPORTED_SQLS, ...SUPPORTED_NOSQLS];
+//#endregion
+
+//#region misc
+export const DEBUG: boolean = false;
 //#endregion
 
 // CSVs
@@ -69,7 +73,7 @@ export const SUPPORTED_ALL = [...SUPPORTED_SQLS, ...SUPPORTED_NOSQLS];
 // Apis
 export const API_URLS = {
   mercadeiro: {
-    sandbox: 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1', // 'https://api.sandbox.mercadeiro.com.br/v1'
+    sandbox: 'https://api.sandbox.mercadeiro.com.br', // 'https://api.sandbox.mercadeiro.com.br/v1' // 'https://us-central1-mercadeiro-896b2.cloudfunctions.net/v1'
     producao: 'https://us-central1-mercadeiro--prod.cloudfunctions.net/v1', // 'https://api.mercadeiro.com.br/v1'
   }
 };
@@ -134,76 +138,96 @@ export const CAMPOS_FORMAS: any = {
 export const CAMPOS_PRODUTOS: any = {
   id: {
     type: DataTypes.INTEGER,
-    field: 'id',
+    field: 'ID_PRODUTO',
     primaryKey: true
   },
   barcode: {
     type: DataTypes.STRING,
-    field: 'barcode'
+    field: 'BARCODE_PRODUTO'
   },
   preco: {
     type: DataTypes.DECIMAL,
-    field: 'preco'
+    field: 'PRECO_VENDA'
   },
-  departamento_id: {
+  departamento1_id: {
     type: DataTypes.INTEGER,
-    field: 'departamento_id'
+    field: 'ID_DEPARTAMENTO1'
   },
-  departamento_nome: {
+  departamento1_nome: {
     type: DataTypes.STRING,
-    field: 'departamento_nome'
+    field: 'NOME_DEPARTAMENTO1'
   },
-  departamento_ativo: {
+  departamento1_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'departamento_ativo'
+    field: 'ATIVO_DEPARTAMENTO1'
   },
-  subdepartamento_id: {
+  departamento2_id: {
     type: DataTypes.INTEGER,
-    field: 'subdepartamento_id'
+    field: 'ID_DEPARTAMENTO2'
   },
-  subdepartamento_nome: {
+  departamento2_nome: {
     type: DataTypes.STRING,
-    field: 'subdepartamento_nome'
+    field: 'NOME_DEPARTAMENTO2'
   },
-  subdepartamento_ativo: {
+  departamento2_ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'subdepartamento_ativo'
+    field: 'ATIVO_DEPARTAMENTO2'
+  },
+  departamento3_id: {
+    type: DataTypes.INTEGER,
+    field: 'ID_DEPARTAMENTO3'
+  },
+  departamento3_nome: {
+    type: DataTypes.STRING,
+    field: 'NOME_DEPARTAMENTO3'
+  },
+  departamento3_ativo: {
+    type: DataTypes.BOOLEAN,
+    field: 'ATIVO_DEPARTAMENTO3'
+  },
+  ncm_produto: {
+    type: DataTypes.STRING,
+    field: 'NCM_PRODUTO'
   },
   nome: {
     type: DataTypes.STRING,
-    field: 'nome'
+    field: 'NOME_PRODUTO'
+  },
+  estoque_controlado: {
+    type: DataTypes.BOOLEAN,
+    field: 'ESTOQUE_CONTROLADO'
   },
   qtde_estoque_minimo: {
     type: DataTypes.DECIMAL,
-    field: 'qtde_estoque_minimo'
+    field: 'QTDE_ESTOQUE_MINIMO'
   },
   qtde_estoque_atual: {
     type: DataTypes.DECIMAL,
-    field: 'qtde_estoque_atual'
+    field: 'QTDE_ESTOQUE_ATUAL'
   },
   atacado_status: {
     type: DataTypes.BOOLEAN,
-    field: 'atacado_status'
+    field: 'ATACADO_STATUS'
   },
   atacado_qtde: {
     type: DataTypes.INTEGER,
-    field: 'atacado_qtde'
+    field: 'ATACADO_QTDE'
   },
   atacado_preco: {
     type: DataTypes.DECIMAL,
-    field: 'atacado_preco'
+    field: 'ATACADO_PRECO'
   },
   tipo_unidade_fracao: {
     type: DataTypes.STRING,
-    field: 'tipo_unidade_fracao'
+    field: 'FRACIONADO_TIPO'
   },
   ativo: {
     type: DataTypes.BOOLEAN,
-    field: 'ativo'
+    field: 'ATIVO_PRODUTO'
   },
   loja_id: {
     type: DataTypes.INTEGER,
-    field: 'loja_id'
+    field: 'ID_LOJA'
   }
 };
 

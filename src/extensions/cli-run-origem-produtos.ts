@@ -7,7 +7,8 @@ import { GluegunToolbox } from 'gluegun';
 //#endregion 
 
 //#region models
-const produtosJson = require('../../config/origens/produtos.json');
+// const produtosJson = require('../../config/origens/produtos.json');
+const configJson = require('../../config/config.json');
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -24,14 +25,34 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // print.success(JSON.stringify(props));
 
-    const { tipoConexao: TIPO_CONEXAO } = produtosJson;
-
+    // const { db: TIPO_CONEXAO } = configJson;
+    // print.info('configJson: ' + JSON.stringify(configJson));
+    const TIPO_CONEXAO: string = configJson?.db || (!!configJson?.csvs ? 'csv' : '');
+    // print.info('TIPO_CONEXAO: ' + TIPO_CONEXAO);
     switch (TIPO_CONEXAO) {
       case 'csv':
+        toolbox.runOrigemProdutosCsv(
+          {
+            dryRun: DRY_RUN,
+            projeto: PROJETO,
+            apiUrl: API_URL,
+            loja: LOJA,
+            conexao: TIPO_CONEXAO
+          }
+        );
         break;
 
-      case 'mongodb':
-        break;
+      // case 'mongodb':
+      //   toolbox.runOrigemProdutosMongoDB(
+      //     {
+      //       dryRun: DRY_RUN,
+      //       projeto: PROJETO,
+      //       apiUrl: API_URL,
+      //       loja: LOJA,
+      //       conexao: TIPO_CONEXAO
+      //     }
+      //   );
+      //   break;
 
       case 'firebird':
         toolbox.runOrigemProdutosFirebird(
@@ -45,20 +66,20 @@ module.exports = (toolbox: GluegunToolbox) => {
         );
         break;
 
-      case 'mariadb':
-      case 'mssql':
-      case 'mysql':
-      case 'postgresql':
-        toolbox.runOrigemProdutosSequelize(
-          {
-            dryRun: DRY_RUN,
-            projeto: PROJETO,
-            apiUrl: API_URL,
-            loja: LOJA,
-            conexao: TIPO_CONEXAO
-          }
-        );
-        break;
+      // case 'mariadb':
+      // case 'mssql':
+      // case 'mysql':
+      // case 'postgres':
+      //   toolbox.runOrigemProdutosSequelize(
+      //     {
+      //       dryRun: DRY_RUN,
+      //       projeto: PROJETO,
+      //       apiUrl: API_URL,
+      //       loja: LOJA,
+      //       conexao: TIPO_CONEXAO
+      //     }
+      //   );
+      //   break;
 
       default:
         break;
