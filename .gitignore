@@ -8,3 +8,5 @@ build
 .vscode
 dev/
 private/
+package-lock.json
+
