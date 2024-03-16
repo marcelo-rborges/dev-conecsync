@@ -1,32 +1,32 @@
 //#region gluegun
-import { GluegunToolbox } from 'gluegun';
-const { http } = require('gluegun');
-const os = require('os');
+import { GluegunToolbox } from 'gluegun'
+const { http } = require('gluegun')
+const os = require('os')
 //#endregion
 
 //#region 3rd
 // import axios/* , { AxiosResponse } */ from 'axios';
-const fs = require('fs');
+const fs = require('fs')
 import {
   get,
   // uniqBy
-} from 'lodash';
-const HASH = require('object-hash');
-const JSONdb = require('simple-json-db');
-//#endregion 
+} from 'lodash'
+const HASH = require('object-hash')
+const JSONdb = require('simple-json-db')
+//#endregion
 
 //#region libs
-import { buildUrl, chkBool, isBarcode } from '../libs';
+import { buildUrl, chkBool, isBarcode } from '../libs'
 //#endregion
 
 //#region models
-type TStatusOnlineProduto = 'on' | 'off' | 'auto' | 'fauto';
-const configJson = require('../../config/config.json');
+// type TStatusOnlineProduto = 'on' | 'off' | 'auto' | 'fauto';
+const configJson = require('../../config/config.json')
 //#endregion
 
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.runSyncProdutos = async (props: any) => {
-    const { print } = toolbox;
+    const { print } = toolbox
     // const QTDE_AUTO_DESTAQUE: number = 10;
 
     // const LOGS: any[] = [];
@@ -42,32 +42,31 @@ module.exports = (toolbox: GluegunToolbox) => {
       MT: 0.5,
       M: 0.5,
       CM: 500,
-    };
+    }
     const {
       dryRun: DRY_RUN,
       apiUrl: API_URL,
       projeto: PROJETO,
-      loja: LOJA
-    } = props;
-    const {
-      id: LOJA_ID,
-      token: LOJA_TOKEN
-    } = LOJA;
+      loja: LOJA,
+    } = props
+    const { id: LOJA_ID, token: LOJA_TOKEN } = LOJA
     const TOTAL: {
-      changed: number,
+      changed: number
       unchanged: number
     } = {
       changed: 0,
-      unchanged: 0
-    };
+      unchanged: 0,
+    }
 
-    let deptos = [];
+    let deptos = []
 
     // JSONdb
-    const DIR: string = `${os.tmpdir()}/hashes/${PROJETO}/lojas/${LOJA_ID}`;
+    const DIR: string = `${os.tmpdir()}/hashes/${PROJETO}/lojas/${LOJA_ID}`
     // console.log('DIR: ', DIR, fs.existsSync(DIR));
     // try {
-    if (!fs.existsSync(DIR)) { fs.mkdirSync(DIR, { recursive: true }); }
+    if (!fs.existsSync(DIR)) {
+      fs.mkdirSync(DIR, { recursive: true })
+    }
     //   fs.access(
     //     DIR,
     //     (error) => {
@@ -79,10 +78,13 @@ module.exports = (toolbox: GluegunToolbox) => {
     //   !!error && console.log(get(error, 'message') || '');
     // } // try-catch
 
-    const DB_PRODUTOS = new JSONdb(`${DIR}/produtos.db`, { asyncWrite: false });
+    const DB_PRODUTOS = new JSONdb(`${DIR}/produtos.db`, { asyncWrite: false })
 
     // print.warning(props);
-    const API = http.create({ baseURL: API_URL, headers: { 'Authorization': `Bearer ${LOJA_TOKEN}` } });
+    const API = http.create({
+      baseURL: API_URL,
+      headers: { Authorization: `Bearer ${LOJA_TOKEN}` },
+    })
     // const API = axios.create({
     //   baseURL: API_URL,
     //   timeout: 1000,
@@ -96,39 +98,50 @@ module.exports = (toolbox: GluegunToolbox) => {
     // const PRODUTOS_BARCODES: any[] = get(props, 'produtos.barcodes') || [];
     // const PRODUTOS_NBARCODES: any[] = get(props, 'produtos.nbarcodes') || [];
     // const PRODUTOS_ALL: any[] = PRODUTOS_BARCODES.concat(PRODUTOS_NBARCODES);
-    const ONLINE_STATUS: TStatusOnlineProduto = configJson?.onlineStatus;
-    const PRODUTOS_ALL: any[] = get(props, 'produtos') || [];
+    const ONLINE_STATUS_BARCODES: boolean = configJson?.onlineStatus?.barcodes
+    const ONLINE_STATUS_NO_BARCODES: boolean =
+      configJson?.onlineStatus?.noBarcodes
+    const PRODUTOS_ALL: any[] = get(props, 'produtos') || []
     // print.debug(PRODUTOS_ALL);
-    const PRODUTOS_SOME = (await API.get('/produtos/flags/some'))?.data?.some;
+    const PRODUTOS_SOME: boolean = (await API.get('/produtos/flags/some'))?.data
+      ?.some
 
     print.table(
       [
         ['Produto(s) encontrado(s)', String(PRODUTOS_ALL.length)],
         ['Primeira carga', !!PRODUTOS_SOME ? 'Não' : 'Sim'],
-        ['Online status', ONLINE_STATUS],
+        ['Online status barcodes', !!ONLINE_STATUS_BARCODES ? 'True' : 'False'],
+        [
+          'Online status no barcodes',
+          !!ONLINE_STATUS_NO_BARCODES ? 'True' : 'False',
+        ],
         // ['Produto(s) com barcodes(s)', String(PRODUTOS_BARCODES.length)],
         // ['Produto(s) sem barcodes(s)', String(PRODUTOS_NBARCODES.length)],
         // ['Departamento(s) encontrado(s)', String(DEPTOS_ALL.length)],
         // ['Subdepartamento(s) encontrado(s)', String(SUBS_ALL.length)],
       ],
-      { format: 'lean' }
-    );
+      { format: 'lean' },
+    )
 
-    print.divider();
-    print.warning('Sincronizando produtos...');
-    print.divider();
+    print.divider()
+    print.warning('Sincronizando produtos...')
+    print.divider()
     for (const PRODUTO of PRODUTOS_ALL) {
       // console.log(PRODUTO);
       // print.debug(`${PRODUTO.ID_PRODUTO}:${JSON.stringify(PRODUTO)}`);
       // TODO: Calcular estoqueCritico usando qtde_estoque_minimo <-> qtde_estoque_atual
-      const BARCODE_PRODUTO: string = String(get(PRODUTO, 'barcodeProduto') || '').trim();
-      const BARCODE = !!isBarcode(BARCODE_PRODUTO) ? BARCODE_PRODUTO : '';
-      const PROD_ID: string = String(get(PRODUTO, 'idProduto') || '');
+      const BARCODE_PRODUTO: string = String(
+        get(PRODUTO, 'barcodeProduto') || '',
+      ).trim()
+      const BARCODE = !!isBarcode(BARCODE_PRODUTO) ? BARCODE_PRODUTO : ''
+      const PROD_ID: string = String(get(PRODUTO, 'idProduto') || '')
       // print.debug(`PROD_ID:${PROD_ID}`);
-      const DEPTO1_ID: string = String(get(PRODUTO, 'idDepartamento1') || '');
-      const DEPTO2_ID: string = String(get(PRODUTO, 'idDepartamento2') || '');
-      const DEPTO3_ID: string = String(get(PRODUTO, 'idDepartamento3') || '');
-      const FRACIONADO_TIPO: string = (get(PRODUTO, 'fracionadoTipo') || '').toUpperCase();
+      const DEPTO1_ID: string = String(get(PRODUTO, 'idDepartamento1') || '')
+      const DEPTO2_ID: string = String(get(PRODUTO, 'idDepartamento2') || '')
+      const DEPTO3_ID: string = String(get(PRODUTO, 'idDepartamento3') || '')
+      const FRACIONADO_TIPO: string = (
+        get(PRODUTO, 'fracionadoTipo') || ''
+      ).toUpperCase()
 
       // idLoja: fixBuffStr(get(row, 'ID_LOJA')) || '',
       // estoqueControlado: fixBuffStr(get(row, 'ESTOQUE_CONTROLADO')) || '',
@@ -137,49 +150,54 @@ module.exports = (toolbox: GluegunToolbox) => {
 
       if (!!PROD_ID) {
         const PROD_BODY: any = {
-          "atacado": {
-            "status": !!chkBool(get(PRODUTO, 'atacadoStatus')),
-            "qtde": Number((get(PRODUTO, 'atacadoQtde') || '')).toString().replace(/,/g, '.') || 0,
-            "preco": Number((get(PRODUTO, 'atacadoPreco') || '')).toString().replace(/,/g, '.') || 0,
+          atacado: {
+            status: !!chkBool(get(PRODUTO, 'atacadoStatus')),
+            qtde:
+              Number(get(PRODUTO, 'atacadoQtde') || '')
+                .toString()
+                .replace(/,/g, '.') || 0,
+            preco:
+              Number(get(PRODUTO, 'atacadoPreco') || '')
+                .toString()
+                .replace(/,/g, '.') || 0,
           },
-          "ativo": !!chkBool(get(PRODUTO, 'ativoProduto')),
-          "barcode": BARCODE,
-          "departamento1": {
-            "id": DEPTO1_ID,
-            "nome": get(PRODUTO, 'nomeDepartamento1') || '',
+          ativo: !!chkBool(get(PRODUTO, 'ativoProduto')),
+          barcode: BARCODE,
+          departamento1: {
+            id: DEPTO1_ID,
+            nome: get(PRODUTO, 'nomeDepartamento1') || '',
           },
-          "departamento2": {
-            "id": DEPTO2_ID,
-            "nome": get(PRODUTO, 'nomeDepartamento2') || '',
+          departamento2: {
+            id: DEPTO2_ID,
+            nome: get(PRODUTO, 'nomeDepartamento2') || '',
           },
-          "departamento3": {
-            "id": DEPTO3_ID,
-            "nome": get(PRODUTO, 'nomeDepartamento3') || '',
+          departamento3: {
+            id: DEPTO3_ID,
+            nome: get(PRODUTO, 'nomeDepartamento3') || '',
           },
-          "estoqueCritico": false,
-          "fracao": {
+          estoqueCritico: false,
+          fracao: {
             tipo: FRACIONADO_TIPO,
-            valor: Number(get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '').toString().replace(/,/g, '.') || 0,
+            valor:
+              Number(
+                get(PRODUTO_FRACIONADO_FRACAO_DEFAULTS, FRACIONADO_TIPO) || '',
+              )
+                .toString()
+                .replace(/,/g, '.') || 0,
           },
-          "ncm": PRODUTO?.ncmProduto || '',
-          "nome": PRODUTO?.nomeProduto || '',
-          "preco": {
+          ncm: PRODUTO?.ncmProduto || '',
+          nome: PRODUTO?.nomeProduto || '',
+          // online: !!PRODUTO?.online,
+          preco: {
             desc: 0,
-            produto: Number((PRODUTO?.precoVenda || '')).toString().replace(/,/g, '.') || 0,
+            produto:
+              Number(PRODUTO?.precoVenda || '')
+                .toString()
+                .replace(/,/g, '.') || 0,
           },
-          "usaNomesBase": chkBool(configJson?.usaNomesBase),
-          "usaDepartamentosBase": chkBool(configJson?.usaDepartamentosBase),
+          usaNomesBase: chkBool(configJson?.usaNomesBase),
+          usaDepartamentosBase: chkBool(configJson?.usaDepartamentosBase),
         };
-
-        // print.warning(PRODUTO?.nomeProduto + ' ' + BARCODE);
-        if (!PRODUTOS_SOME || ONLINE_STATUS === 'fauto') {
-          // if (typeof ONLINE_STATUS === 'boolean') { PROD_BODY.online = !!ONLINE_STATUS; } // if
-          PROD_BODY.online = ONLINE_STATUS === 'on'
-            ? true
-            : ONLINE_STATUS === 'off'
-              ? false
-              : !!BARCODE;
-        } // if
 
         // print.debug(`${PROD_ID}:${JSON.stringify(PROD_BODY)}`);
 
@@ -193,15 +211,28 @@ module.exports = (toolbox: GluegunToolbox) => {
         // } // if
 
         const HASH_PROD: string = HASH(PROD_BODY) || '';
+        // print.warning(PRODUTO?.nomeProduto + ' ' + BARCODE);
+        if (!PRODUTOS_SOME) {
+          // if (typeof ONLINE_STATUS === 'boolean') { PROD_BODY.online = !!ONLINE_STATUS; } // if
+          // PROD_BODY.online =
+          //   ONLINE_STATUS === 'on'
+          //     ? true
+          //     : ONLINE_STATUS === 'off'
+          //       ? false
+          //       : !!BARCODE
+          PROD_BODY.online = !!BARCODE
+            ? ONLINE_STATUS_BARCODES
+            : ONLINE_STATUS_NO_BARCODES
+        } // if
         const DB_HASH_PROD = get(DB_PRODUTOS.get(PROD_ID), 'hash') || '';
         // print.debug(`DRY-RUN:${!!DRY_RUN}, #${PROD_ID}, HASH_PROD:${HASH_PROD}, DB_HASH_PROD:${DB_HASH_PROD}`);
-        const HASH_CHANGED: boolean = HASH_PROD !== DB_HASH_PROD;
-        TOTAL[HASH_CHANGED ? 'changed' : 'unchanged'] += 1;
-        process.stdout.write(HASH_CHANGED ? '*' : '.');
+        const HASH_CHANGED: boolean = HASH_PROD !== DB_HASH_PROD
+        TOTAL[HASH_CHANGED ? 'changed' : 'unchanged'] += 1
+        process.stdout.write(HASH_CHANGED ? '*' : '.')
         if (!DRY_RUN) {
           try {
             if (!!HASH_CHANGED) {
-              DB_PRODUTOS.set(PROD_ID, { hash: HASH_PROD });
+              DB_PRODUTOS.set(PROD_ID, { hash: HASH_PROD })
               // await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
               /* API.post(
                 `/produtos/${PROD_ID}`,
@@ -212,87 +243,112 @@ module.exports = (toolbox: GluegunToolbox) => {
                   print.divider();
                 }); */
               // gluegun.http
-              const RESP = await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
+              const RESP = await API.post(`/produtos/${PROD_ID}`, PROD_BODY)
               // print.debug(`\n#OK: ${PROD_ID}: ${JSON.stringify(RESP?.data)}`);
               // axios
-              // const RET: AxiosResponse = 
+              // const RET: AxiosResponse =
               // await API.post(`/produtos/${PROD_ID}`, PROD_BODY);
               // print.success(`\n#${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
-              deptos.push(`${RESP?.data?.departamentos?.d1?.id || ''},${RESP?.data?.departamentos?.d1?.nome || ''},${RESP?.data?.departamentos?.d2?.id || ''},${RESP?.data?.departamentos?.d2?.nome || ''},${RESP?.data?.departamentos?.d3?.id || ''},${RESP?.data?.departamentos?.d3?.nome || ''}`);
+              deptos.push(
+                `${RESP?.data?.departamentos?.d1?.id || ''},${
+                  RESP?.data?.departamentos?.d1?.nome || ''
+                },${RESP?.data?.departamentos?.d2?.id || ''},${
+                  RESP?.data?.departamentos?.d2?.nome || ''
+                },${RESP?.data?.departamentos?.d3?.id || ''},${
+                  RESP?.data?.departamentos?.d3?.nome || ''
+                }`,
+              )
               // deptos.push(`${RESP?.data?.departamentos?.d1?.id || ''},${RESP?.data?.departamentos?.d2?.id || ''},${RESP?.data?.departamentos?.d3?.id || ''}`);
-              print.success(`\n#${PROD_ID}: ${JSON.stringify(RESP?.data)}`);
-              print.divider();
+              print.success(`\n#${PROD_ID}: ${JSON.stringify(RESP?.data)}`)
+              print.divider()
             } // if
           } catch (err) {
-            !!err && print.warning(err);
+            !!err && print.warning(err)
           } // try-catch
         } else {
           // print.highlight(`DRY-RUN: ${JSON.stringify(SUB_BODY)}`);
           // console.log(PROD_ID, HASH_PROD, DB_HASH_PROD);
           if (HASH_PROD !== DB_HASH_PROD) {
-            print.highlight(`\nDRY-RUN: #${PROD_ID}: ${JSON.stringify(PROD_BODY)}`);
-            print.divider();
+            print.highlight(
+              `\nDRY-RUN: #${PROD_ID}: ${JSON.stringify(PROD_BODY)}`,
+            )
+            print.divider()
           } // if
         } // else
       } // if
     } // for
 
     // process.stdout.write(JSON.stringify(TOTAL));
-    process.stdout.write('\n');
-    print.divider();
+    process.stdout.write('\n')
+    print.divider()
     print.table(
       [
         ['Produto(s) modificado(s)', String(TOTAL.changed)],
         ['Produto(s) NÃO modificado(s)', String(TOTAL.unchanged)],
       ],
-      { format: 'lean' }
-    );
+      { format: 'lean' },
+    )
     if (!DRY_RUN) {
-      const UNIQUE = [];
-      deptos.forEach((s) => { if (!UNIQUE.includes(s)) { UNIQUE.push(s); } });
+      const UNIQUE = []
+      deptos.forEach((s) => {
+        if (!UNIQUE.includes(s)) {
+          UNIQUE.push(s)
+        }
+      })
       deptos = (UNIQUE || [])
-        .map(ad => (ad.split(',').filter(s => !!s)).join(','))
-        .filter(s => !!s.replace(/,/g, ''))
-        .filter(as => ((as.split(',') || []).length > 2));
+        .map((ad) =>
+          ad
+            .split(',')
+            .filter((s) => !!s)
+            .join(','),
+        )
+        .filter((s) => !!s.replace(/,/g, ''))
+        .filter((as) => (as.split(',') || []).length > 2)
       // console.log(deptos);
 
-      print.divider();
+      print.divider()
       print.warning('Verificando departamentos...')
-      print.divider();
-      for (const ad of (deptos || [])) {
+      print.divider()
+      for (const ad of deptos || []) {
         try {
           // let path = `/departamentos/${PROD_ID}`
           // print.debug(ad);
-          const CELLS = ad.split(',');
+          const CELLS = ad.split(',')
           if (CELLS?.length === 4 || CELLS?.length === 6) {
-            const [D1, N1, D2, N2, D3, N3] = CELLS;
+            const [D1, N1, D2, N2, D3, N3] = CELLS
             // print.debug([D1, N1, D2, N2, D3, N3]);
-            let nome: string = N1;
+            let nome: string = N1
 
             // let url = new URL(`/departamentos/${D1}`);
             // !!D2 && url.searchParams.append('id2', D2);
             // !!D3 && url.searchParams.append('id3', D3);
             // print.debug(url);
 
-            const PARAMS: any = {};
-            if (!!D2) { PARAMS.id2 = D2; nome = N2; }
-            if (!!D3) { PARAMS.id3 = D3; nome = N3; }
+            const PARAMS: any = {}
+            if (!!D2) {
+              PARAMS.id2 = D2
+              nome = N2
+            }
+            if (!!D3) {
+              PARAMS.id3 = D3
+              nome = N3
+            }
 
             // /departamentos/OrlVI1XYyxM2519fc3Mq?id2=mowjjkPCnDRsL5zGMw1n&id3=FNbVRuxJfcqGcPVo42XY
-            const URL: string = buildUrl(`/departamentos/${D1}`, PARAMS);
+            const URL: string = buildUrl(`/departamentos/${D1}`, PARAMS)
             // print.debug(URL);
             const CHANGES: any = {
               nome,
               _refresh: Math.random().toString(36).slice(2, 10),
-            };
-            await API.post(URL, CHANGES);
-            print.success(`\n#${nome}: ${JSON.stringify(CHANGES)}`);
+            }
+            await API.post(URL, CHANGES)
+            print.success(`\n#${nome}: ${JSON.stringify(CHANGES)}`)
 
             // const RESP = await API.post(path, PROD_BODY);
-            print.divider();
+            print.divider()
           } // if
         } catch (err) {
-          !!err && print.warning(err);
+          !!err && print.warning(err)
         } // try-catch
       } // for-of
     } // if
@@ -453,5 +509,5 @@ module.exports = (toolbox: GluegunToolbox) => {
       print.error(error.message);
     } // try-catch
     */
-  };
+  }
 }
